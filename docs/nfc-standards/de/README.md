@@ -6,11 +6,11 @@ Dieser Ordner enthält die Dokumentation der verschiedenen NFC-Tag-Formate die i
 
 | Standard | Datei | NFC | Chip | Offen |
 |----------|-------|-----|------|-------|
-| [FilaMan Spool Tag](./nfc-standards/filaman-spool-tag_de.md) | `filaman-spool-tag.md` | ISO 14443A | NTAG21x | ✅ |
-| [FilaMan Hersteller-Tag](./nfc-standards/filaman-manufacturer-tag_de.md) | `filaman-manufacturer-tag.md` | ISO 14443A | NTAG21x | ✅ |
-| [OpenSpool](./nfc-standards/openspool_de.md) | `openspool.md` | ISO 14443A | NTAG215 | ✅ |
-| [OpenPrintTag](./nfc-standards/openprinttag_de.md) | `openprinttag.md` | ISO 15693 | ICODE SLIX2 | ✅ |
-| [BambuLab RFID](./nfc-standards/bambulab-rfid_de.md) | `bambulab-rfid.md` | ISO 14443A | MIFARE Classic | ❌ |
+| [FilaMan Spool Tag](./filaman-spool-tag_de.md) | `filaman-spool-tag.md` | ISO 14443A | NTAG21x | ✅ |
+| [FilaMan Hersteller-Tag](./filaman-manufacturer-tag_de.md) | `filaman-manufacturer-tag.md` | ISO 14443A | NTAG21x | ✅ |
+| [OpenSpool](./openspool_de.md) | `openspool.md` | ISO 14443A | NTAG215 | ✅ |
+| [OpenPrintTag](./openprinttag_de.md) | `openprinttag.md` | ISO 15693 | ICODE SLIX2 | ✅ |
+| [BambuLab RFID](./bambulab-rfid_de.md) | `bambulab-rfid.md` | ISO 14443A | MIFARE Classic | ❌ |
 
 ## Hardware-Kompatibilität
 
