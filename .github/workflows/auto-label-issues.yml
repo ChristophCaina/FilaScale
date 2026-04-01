@@ -1,0 +1,52 @@
+name: Issue Auto-Labeler
+on:
+  issues:
+    types: [opened, edited]
+
+jobs:
+  label-issue:
+    runs-on: ubuntu-latest
+    permissions:
+      issues: write
+    steps:
+      - name: Assign labels based on form data
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const body = context.payload.issue.body.toLowerCase();
+            const title = context.payload.issue.title.toLowerCase();
+            const labels = [];
+
+            // 1. Firmware & API (Multi-lang)
+            if (body.includes('firmware') || body.includes('integration') || body.includes('esp32')) 
+              labels.push('area: firmware');
+
+            // 2. Hardware (Multi-lang)
+            if (body.includes('hardware') || body.includes('3d-print') || body.includes('mechanik') || body.includes('wiring')) 
+              labels.push('area: hardware');
+
+            // 3. Documentation & Web (Multi-lang)
+            if (body.includes('doc') || body.includes('web') || body.includes('readme') || body.includes('anleitung')) 
+              labels.push('area: documentation');
+
+            // 4. Standard-Typen (Keywords)
+            if (title.includes('bug') || body.includes('fehler') || title.includes('fix')) labels.push('bug');
+            if (title.includes('feature') || title.includes('wunsch') || title.includes('add')) labels.push('enhancement');
+            if (title.includes('frage') || title.includes('?') || title.includes('how')) labels.push('question');
+
+            // Zusätzliche Logik für den Labeler
+            if (body.includes('esp32-c3') || body.includes('esp32-s3')) 
+              labels.push('area: hardware');
+
+            if (body.includes('log') && body.includes('error'))
+              labels.push('bug');
+
+            const uniqueLabels = [...new Set(labels)];
+            if (uniqueLabels.length > 0) {
+              await github.rest.issues.addLabels({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                issue_number: context.payload.issue.number,
+                labels: uniqueLabels
+              });
+            }
