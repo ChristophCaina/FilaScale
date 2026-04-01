@@ -1,2 +1,2 @@
 # ⚖ FilaScale
-esphome based filament scale
+_yet another filament scale_
