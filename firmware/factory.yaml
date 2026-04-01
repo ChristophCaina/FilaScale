@@ -1,0 +1,76 @@
+# ============================================================
+# factory.yaml
+# Used ONLY for the Web Installer initial flash.
+#
+# Contains: wifi (AP/Improv), api (no key), ota, captive_portal
+# References filament-scale.yaml as a package.
+#
+# After flashing:
+#   1. Improv WiFi → user enters credentials
+#   2. HA discovers device
+#   3. ESPHome "Take Control" → generates API key →
+#      compiles user's local config → flashes OTA
+#
+# This file is NOT used for OTA updates after initial setup.
+# ============================================================
+
+substitutions:
+  name: "filascale"
+  friendly_name: "FilaScale"
+  device_comment: "Filament Scale with ESPHome"
+
+  # -- Backend IPs --
+  backend_ip: ""
+
+  # -- Scale calibration --
+  scale_calibration_factor: ""
+
+  # -- Pin assignments (default: Ender3/Ender5 display + ESP32 DevKit) --
+  pin_status_led:    GPIO02   # Status LED (built-in on most boards)
+  pin_display_clk:   GPIO18   # ST7920 CLK (Ender display EXP1)
+  pin_display_mosi:  GPIO23   # ST7920 MOSI
+  pin_display_cs:    GPIO17   # ST7920 CS
+  pin_encoder_a:     GPIO32   # Rotary encoder A
+  pin_encoder_b:     GPIO33   # Rotary encoder B
+  pin_encoder_btn:   GPIO19   # Rotary encoder button
+  pin_buzzer:        GPIO16   # Buzzer
+  pin_scale_dt:      GPIO21   # HX711 DOUT
+  pin_scale_sck:     GPIO22   # HX711 CLK
+  pin_i2c_sda:       GPIO13   # I2C SDA (NFC)
+  pin_i2c_scl:       GPIO14   # I2C SCL (NFC)
+  pin_stepper_step:  GPIO25   # Stepper STEP (winder add-on)
+  pin_stepper_dir:   GPIO26   # Stepper DIR (winder add-on)
+  pin_filament_sens: GPIO27   # Filament runout sensor
+  pin_speed_poti:    GPIO34   # Potentiometer (winder speed)
+  pin_addon_detect:  GPIO05   # Winder add-on detection
+
+packages:
+  filament_scale: github://ChristophCaina/filamscale/firmware/filascale.yaml@main
+
+# WiFi: no credentials — configured via Improv or Captive Portal
+wifi:
+  ap:
+    ssid: "${name} Fallback"
+    password: "filament123"
+
+# Improv WiFi via serial (ESP Web Tools)
+improv_serial:
+
+# Improv WiFi via Bluetooth LE
+esp32_improv:
+  authorizer: none
+
+# Fallback AP + captive portal
+captive_portal:
+
+# API without key — HA can connect, ESPHome will add key on Take Control
+api:
+
+ota:
+  - platform: esphome
+  - platform: http_request
+
+# Points to this file so ESPHome knows what to import on Take Control
+dashboard_import:
+  package_import_url: github://ChristophCaina/filascale/firmware/factory.yaml@main
+  import_full_config: false
