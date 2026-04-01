@@ -1,0 +1,16 @@
+# Verhindert, dass Nutzer das Template-System umgehen und "leere" Issues erstellen
+blank_issues_enabled: false
+
+# Zusätzliche hilfreiche Links, die oben in der Auswahl angezeigt werden
+contact_links:
+  - name: "📖 Online Documentation / Dokumentation"
+    url: "https://christophcaina.github.io/filament_scale/docs.html"
+    about: "Read the guides before opening an issue. / Bitte lies erst die Anleitung."
+    
+  - name: "⚖️ Scale Calibration / Waage kalibrieren"
+    url: "https://christophcaina.github.io/filament_scale/docs.html?file=calibration"
+    about: "Direct link to the calibration guide. / Direktlink zur Kalibrierungsanleitung."
+
+  - name: "💬 Discussions & Help / Hilfe & Austausch"
+    url: "https://github.com/christophcaina/filament_scale/discussions"
+    about: "For general questions and community support. / Für allgemeine Fragen."
