@@ -8,4 +8,4 @@
 _yet another filament scale_
 
 ---
-[Dokumentation (DE)](./docs/de/README.md) / [Documentation (EN)](./docs/en/README.md)
+[Dokumentation (DE)](./docs/de/README.md) / Documentation (EN)
