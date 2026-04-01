@@ -1,2 +1,2 @@
-# FilaScale
-_yet another filament scale ..._
+# ⚖ FilaScale
+_yet another filament scale_
