@@ -1,2 +1,2 @@
-# filascale
+# ⚖ FilaScale
 esphome based filament scale
