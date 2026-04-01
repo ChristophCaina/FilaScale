@@ -1,0 +1,28 @@
+# .github/labeler.yml
+"area: documentation":
+  - changed-files:
+    - any-glob-to-any-file: ['docs/*.md', 'README.md', 'index.html', 'docs.html']
+
+"area: firmware":
+  - changed-files:
+    - any-glob-to-any-file: ['firmware-builds/**', 'src/**', 'firmware/**']
+
+"area: hardware":
+  - changed-files:
+    - any-glob-to-any-file: ['3d-files/**', 'hardware.md', 'pcb-layouts', '**/*.3mf', '**/*.3mf', '**/*.stp', '**/*.step']
+
+"area: infrastructure":
+  - changed-files:
+    - any-glob-to-any-file: ['.github/workflows/**']
+
+# Ergänzung für Standard-Labels basierend auf PR-Titel oder Branch-Name
+"bug":
+  - title: ['.*fix.*', '.*bug.*', '.*behebung.*', '.*fehler.*']
+  - head-branch: ['^fix/.*', '.*patch.*']
+
+"enhancement":
+  - title: ['.*feat.*', '.*neu.*', '.*add.*', '.*verbesserung.*']
+  - head-branch: ['^feature/.*', '^feat/.*']
+
+"question":
+  - title: ['.*\?.*', '.*frage.*', '.*help.*', '.*hilfe.*']
