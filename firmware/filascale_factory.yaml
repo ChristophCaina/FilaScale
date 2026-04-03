@@ -72,5 +72,5 @@ ota:
 
 # Points to this file so ESPHome knows what to import on Take Control
 dashboard_import:
-  package_import_url: github://ChristophCaina/filascale/firmware/factory.yaml@main
+  package_import_url: github://ChristophCaina/filascale/firmware/filascale_factory.yaml@main
   import_full_config: false
