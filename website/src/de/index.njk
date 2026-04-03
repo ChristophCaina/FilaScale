@@ -1,0 +1,63 @@
+---
+layout: layouts/base.njk
+i18n: de
+permalink: /de/
+title: ""
+---
+
+{% block content %}
+<!-- Hero -->
+<section class="hero">
+  <div class="container">
+    <div class="hero-content">
+      <h1>{{ i18n.hero.title }}</h1>
+      <p class="hero-subtitle">{{ i18n.hero.subtitle }}</p>
+      <div class="hero-actions">
+        <a href="/de/install/" class="btn btn-primary">{{ i18n.hero.ctaInstall }}</a>
+        <a href="/de/docs/" class="btn btn-secondary">{{ i18n.hero.ctaDocs }}</a>
+      </div>
+    </div>
+    <div class="hero-visual" aria-hidden="true">
+      <div class="hero-device">⚖</div>
+    </div>
+  </div>
+</section>
+
+<!-- Features -->
+<section class="features section">
+  <div class="container">
+    <h2 class="section-title">{{ i18n.features.title }}</h2>
+    <div class="features-grid">
+      <div class="feature-card">
+        <div class="feature-icon">⚖️</div>
+        <h3>{{ i18n.features.weight.title }}</h3>
+        <p>{{ i18n.features.weight.desc }}</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">📡</div>
+        <h3>{{ i18n.features.nfc.title }}</h3>
+        <p>{{ i18n.features.nfc.desc }}</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">🏠</div>
+        <h3>{{ i18n.features.ha.title }}</h3>
+        <p>{{ i18n.features.ha.desc }}</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">🖥️</div>
+        <h3>{{ i18n.features.display.title }}</h3>
+        <p>{{ i18n.features.display.desc }}</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Quick Install CTA -->
+<section class="cta section">
+  <div class="container">
+    <h2>{{ i18n.install.title }}</h2>
+    <p>{{ i18n.install.subtitle }}</p>
+    <a href="/de/install/" class="btn btn-primary btn-large">{{ i18n.hero.ctaInstall }}</a>
+  </div>
+</section>
+{% endblock %}

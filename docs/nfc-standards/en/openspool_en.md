@@ -1,6 +1,8 @@
-# OpenSpool
+# 📡 OpenSpool
+[← NFC Standards](./README.md)
 
-## Overview
+
+## 📋 Overview
 
 | Property          | Value                                     |
 |-------------------|-------------------------------------------|
@@ -12,11 +14,11 @@
 | **Open**          | Yes (OSHWA certified: US002704)           |
 | **Project URL**   | https://openspool.io / github.com/spuder/OpenSpool |
 
-## Purpose
+## 🎯 Purpose
 
 OpenSpool is an open standard for NFC tags on filament spools, primarily developed for **direct integration with BambuLab printers via MQTT**. The tag contains all relevant filament data directly — no server required for reading.
 
-## Tag Format
+## 📄 Tag Format
 
 ```json
 {
@@ -32,7 +34,7 @@ OpenSpool is an open standard for NFC tags on filament spools, primarily develop
 
 > **Note:** Temperatures are stored as **strings**, not as integers.
 
-## Fields
+## 📊 Fields
 
 | Field       | Type   | Required | Description                                       |
 |-------------|--------|----------|---------------------------------------------------|
@@ -53,7 +55,7 @@ OpenSpool is an open standard for NFC tags on filament spools, primarily develop
 | `subtype`                | String | Subtype (e.g. "Matte", "Silk", "CF")     |
 | `additional_color_hexes` | Array  | Additional colors for multicolor filaments |
 
-## Detection
+## 🔍 Detection
 
 A tag is recognized as an OpenSpool tag when:
 - Field `protocol` is present and equals `"openspool"`
@@ -64,7 +66,7 @@ Has JSON payload?
         └── → OpenSpool Tag ✓
 ```
 
-## NDEF Record Structure
+## 🗂️ NDEF Record Structure
 
 OpenSpool uses a **MIME type NDEF record** instead of a text record:
 
@@ -79,7 +81,7 @@ NDEF Message
 > **Important:** The MIME type `application/json` distinguishes OpenSpool from FilaMan,  
 > which uses a text record (`TNF: 0x01`, type `"T"`).
 
-## Writing Tags
+## ✏️ Writing Tags
 
 OpenSpool tags are primarily written **manually via a smartphone app**. There is no official desktop or ESP32-based writing app.
 
@@ -91,7 +93,7 @@ Workflow:
 
 **Limitation:** No automatic link to Spoolman — data must be entered manually.
 
-## Refill Spool Problem
+## ♻️ Refill Spool Problem
 
 OpenSpool has **no unique identifier per spool**. With refill spools (reusable spool bodies with new filament), the tag must be manually rewritten with each refill.
 
@@ -103,7 +105,7 @@ Refill scenario:
   → Tag must be manually rewritten
 ```
 
-## BambuLab Integration
+## 🔗 BambuLab Integration
 
 The primary target application of OpenSpool is direct MQTT communication with BambuLab printers:
 
@@ -120,7 +122,7 @@ OpenSpool reads tag
 
 Supported models: X1C, X1, P1P, P1S, A1, A1 Mini
 
-## Spoolman Integration
+## 🔗 Spoolman Integration
 
 OpenSpool has **no native Spoolman integration**. Matching is only possible via fuzzy matching:
 
@@ -145,7 +147,7 @@ Read tag: brand=Prusament, type=PLA, color_hex=808080
 | **No Spoolman reference** | Matching only via product data |
 | **Temperatures as string** | Unusual format, increases parsing effort |
 
-## Compatibility
+## 🔌 Compatibility
 
 | System      | Support                              |
 |-------------|--------------------------------------|

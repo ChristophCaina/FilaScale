@@ -1,0 +1,75 @@
+{
+  "lang": "de",
+  "langLabel": "Deutsch",
+  "langSwitch": "English",
+  "langSwitchUrl": "/en/",
+  "nav": {
+    "home": "Startseite",
+    "install": "Installation",
+    "docs": "Dokumentation"
+  },
+  "hero": {
+    "title": "FilaScale",
+    "subtitle": "ESPHome-basierte Filamentwaage mit NFC-Unterstützung",
+    "ctaInstall": "Jetzt installieren",
+    "ctaDocs": "Dokumentation"
+  },
+  "features": {
+    "title": "Features",
+    "weight": {
+      "title": "Gewichtsmessung",
+      "desc": "Präzise HX711-basierte Gewichtsmessung mit automatischem Tare"
+    },
+    "nfc": {
+      "title": "NFC-Integration",
+      "desc": "Unterstützt FilaMan, OpenSpool, OpenPrintTag und BambuLab RFID"
+    },
+    "ha": {
+      "title": "Home Assistant",
+      "desc": "Native ESPHome-Integration mit automatischer Entity-Erkennung"
+    },
+    "display": {
+      "title": "Display-Unterstützung",
+      "desc": "ST7920 128×64 und LCD1602 16×2 als Display-Varianten"
+    }
+  },
+  "install": {
+    "title": "Web-Installation",
+    "subtitle": "Installiere FilaScale direkt im Browser — kein USB-Treiber, kein Terminal.",
+    "requirements": "Voraussetzungen",
+    "reqList": [
+      "Google Chrome oder Microsoft Edge (Web Serial API erforderlich)",
+      "ESP32-Entwicklungsboard per USB verbunden",
+      "USB-Kabel mit Datenleitungen (kein reines Ladekabel)"
+    ],
+    "steps": "Installationsschritte",
+    "step1": "ESP32 per USB mit dem Computer verbinden",
+    "step2": "Firmware-Variante auswählen",
+    "step3": "\"Installieren\" klicken und COM-Port auswählen",
+    "step4": "Warten bis die Installation abgeschlossen ist",
+    "step5": "Nach dem Neustart: WLAN in ESPHome konfigurieren",
+    "variantLabel": "Firmware-Variante",
+    "variants": {
+      "pn532": "PN532 NFC-Reader",
+      "pn5180": "PN5180 NFC-Reader",
+      "st7920": "ST7920 Display",
+      "lcd1602": "LCD1602 Display"
+    },
+    "btnInstall": "Installieren",
+    "browserWarning": "⚠️ Web Serial wird von diesem Browser nicht unterstützt. Bitte Chrome oder Edge verwenden.",
+    "notSupported": "Dein Browser unterstützt keine Web Serial API."
+  },
+  "docs": {
+    "title": "Dokumentation",
+    "subtitle": "Vollständige Dokumentation zu Hardware, Firmware und NFC-Standards",
+    "sections": {
+      "hardware": "Hardware",
+      "firmware": "Firmware",
+      "nfc": "NFC Standards"
+    }
+  },
+  "footer": {
+    "license": "MIT Lizenz",
+    "github": "GitHub"
+  }
+}

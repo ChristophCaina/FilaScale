@@ -1,0 +1,101 @@
+# ============================================================
+# main.yaml
+# Main configuration: WiFi, API, OTA, Logger, LED, Buzzer,
+# Project info & dashboard_import
+# ============================================================
+
+# -- Status LED --
+light:
+  - platform: status_led
+    id: statusled
+    name: Status LED
+    entity_category: "diagnostic"
+    internal: true
+    pin:
+      number: ${pin_status_led}
+      inverted: false
+
+# -- Buzzer --
+output:
+  - platform: ledc
+    id: buzzer_output
+    pin: ${pin_buzzer}
+    frequency: 2000Hz
+
+rtttl:
+  output: buzzer_output
+  id: buzzer
+
+# --- Sensors --
+sensor:
+  # Wifi-Information
+  - platform: wifi_signal
+    name: "WiFi Signal dB"
+    id: wifi_signal_db
+    update_interval: 60s
+    entity_category: "diagnostic"
+
+  # ESP Chip-Temperatur
+  - platform: internal_temperature
+    name: "Internal Temperature"
+    entity_category: "diagnostic"
+
+  # Device Uptime Information 
+  - platform: uptime
+    name: Uptime
+    id: uptime_sensor
+    entity_category: "diagnostic"
+    update_interval: 60s
+
+text_sensor:
+  # Wifi-Information
+  - platform: wifi_info
+    ip_address:
+      name: IP Address
+      id: wifi_ip
+      entity_category: "diagnostic"
+    ssid:
+      name: Connected SSID
+      entity_category: "diagnostic"
+    dns_address:
+      name: DNS Address
+    power_save_mode:
+      name: Wifi Power Save Mode
+
+# --- Buttons --
+button:
+  - platform: template
+    name: "Identify"
+    on_press:
+      then:
+        - light.turn_on:
+            id: statusled
+        - delay: 10s
+        - light.turn_off: statusled
+
+  # Restart the device from the UI
+  - platform: restart
+    name: "Restart Device"
+    entity_category: "diagnostic"
+
+  # Shutdown the ESP completely
+  - platform: shutdown
+    name: "Shutdown Device"
+    entity_category: "diagnostic"
+    
+# Convenience scripts for common beep patterns
+script:
+  - id: beep_short
+    then:
+      - rtttl.play:
+          rtttl: "beep:d=4,o=5,b=200:16e6"
+
+  - id: beep_confirm
+    then:
+      - rtttl.play:
+          rtttl: "confirm:d=4,o=5,b=200:16e6,16e6"
+
+  - id: beep_error
+    then:
+      - rtttl.play:
+          rtttl: "error:d=4,o=5,b=100:16c5,16b4"

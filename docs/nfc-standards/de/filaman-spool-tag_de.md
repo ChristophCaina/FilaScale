@@ -1,6 +1,8 @@
-# FilaMan Spool Tag
+# 🏷️ FilaMan Spool Tag
+[← NFC Standards](./README.md)
 
-## Übersicht
+
+## 📋 Übersicht
 
 | Eigenschaft       | Wert                              |
 |-------------------|-----------------------------------|
@@ -11,11 +13,11 @@
 | **Smartphone**    | Android & iOS                     |
 | **Offen**         | Ja (MIT Lizenz)                   |
 
-## Zweck
+## 🎯 Zweck
 
 Der FilaMan Spool Tag ist ein einfacher **Zeiger auf eine Spoolman-Spule**. Er enthält keine Filamentdaten direkt, sondern ausschließlich die interne ID der Spule in Spoolman. Die eigentlichen Daten (Hersteller, Material, Farbe, Restgewicht) werden zur Laufzeit aus der Spoolman-API abgerufen.
 
-## Tag-Format
+## 📄 Tag-Format
 
 ```json
 {
@@ -26,20 +28,20 @@ Der FilaMan Spool Tag ist ein einfacher **Zeiger auf eine Spoolman-Spule**. Er e
 > **Hinweis:** `sm_id` kann als String `"42"` oder als Integer `42` vorliegen.  
 > Beide Varianten kommen in der Praxis vor und müssen beim Lesen berücksichtigt werden.
 
-## Felder
+## 📊 Felder
 
 | Feld     | Typ             | Pflicht | Beschreibung                          |
 |----------|-----------------|---------|---------------------------------------|
 | `sm_id`  | String oder Int | Ja      | Spoolman Spool-ID (interne Datenbank-ID) |
 
-## Besonderheiten
+## ✨ Besonderheiten
 
 - **Minimaler Speicherbedarf**: Der Tag enthält nur das Nötigste — ideal für NTAG213 (144 Bytes nutzbar)
 - **Server-abhängig**: Ohne erreichbares Spoolman/FilaMan-Backend keine Offline-Nutzung möglich
 - **Nicht selbstbeschreibend**: Ein fremdes Gerät ohne Spoolman-Zugang kann den Tag nicht interpretieren
 - **Eindeutig**: Da `sm_id` eine Datenbankid ist, ist jede Spule eindeutig identifizierbar
 
-## NDEF Record Struktur
+## 🗂️ NDEF Record Struktur
 
 ```
 NDEF Message
@@ -50,7 +52,7 @@ NDEF Message
         └── Payload: {"sm_id":"42"}
 ```
 
-## Beispiel (ESPHome Lesen)
+## 💻 Beispiel (ESPHome Lesen)
 
 ```yaml
 on_tag:
@@ -74,7 +76,7 @@ on_tag:
         }
 ```
 
-## Beispiel (ESPHome Schreiben)
+## 💻 Beispiel (ESPHome Schreiben)
 
 ```yaml
 - nfc.mifare_ultralight.write_ndef_message:
@@ -85,7 +87,7 @@ on_tag:
         payload: "{\"sm_id\":\"42\"}"
 ```
 
-## Verknüpfung mit Spoolman
+## 🔗 Verknüpfung mit Spoolman
 
 ```
 Tag gelesen: sm_id = 42
@@ -102,7 +104,7 @@ Tag gelesen: sm_id = 42
             }
 ```
 
-## Limitierungen
+## ⚠️ Limitierungen
 
 | Problem | Beschreibung |
 |---------|-------------|
@@ -110,7 +112,7 @@ Tag gelesen: sm_id = 42
 | **Keine Offline-Lesbarkeit** | Tag allein verrät nichts über das Filament |
 | **Keine Hersteller-Infos** | Muss separat aus Spoolman abgerufen werden |
 
-## Kompatibilität
+## 🔌 Kompatibilität
 
 | System      | Unterstützung |
 |-------------|---------------|

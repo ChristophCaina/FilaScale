@@ -1,0 +1,55 @@
+---
+layout: layouts/base.njk
+i18n: en
+permalink: /en/docs/
+title: Documentation
+---
+
+{% block content %}
+<div class="page-header section">
+  <div class="container">
+    <h1>{{ i18n.docs.title }}</h1>
+    <p class="page-subtitle">{{ i18n.docs.subtitle }}</p>
+  </div>
+</div>
+
+<section class="docs-section section">
+  <div class="container">
+    <div class="docs-grid">
+
+      <!-- Hardware -->
+      <div class="docs-category">
+        <h2 class="docs-category-title">🔧 {{ i18n.docs.sections.hardware }}</h2>
+        <ul class="docs-list">
+          <li><a href="/en/docs/hardware/">Display Variants</a></li>
+          <li><a href="/en/docs/hardware/display_st7920_en/">ST7920 128×64</a></li>
+          <li><a href="/en/docs/hardware/display_lcd1602_en/">LCD1602 16×2</a></li>
+        </ul>
+      </div>
+
+      <!-- Firmware -->
+      <div class="docs-category">
+        <h2 class="docs-category-title">⚡ {{ i18n.docs.sections.firmware }}</h2>
+        <ul class="docs-list">
+          <li><a href="/en/docs/firmware/entities_en/">Home Assistant Entities</a></li>
+          <li><a href="/en/docs/firmware/webinterface_en/">ESPHome Web Interface</a></li>
+        </ul>
+      </div>
+
+      <!-- NFC Standards -->
+      <div class="docs-category">
+        <h2 class="docs-category-title">📡 {{ i18n.docs.sections.nfc }}</h2>
+        <ul class="docs-list">
+          <li><a href="/en/docs/nfc-standards/">Overview</a></li>
+          <li><a href="/en/docs/nfc-standards/filaman-spool-tag_en/">FilaMan Spool Tag</a></li>
+          <li><a href="/en/docs/nfc-standards/filaman-manufacturer-tag_en/">FilaMan Manufacturer Tag</a></li>
+          <li><a href="/en/docs/nfc-standards/openspool_en/">OpenSpool</a></li>
+          <li><a href="/en/docs/nfc-standards/openprinttag_en/">OpenPrintTag</a></li>
+          <li><a href="/en/docs/nfc-standards/bambulab-rfid_en/">BambuLab RFID</a></li>
+        </ul>
+      </div>
+
+    </div>
+  </div>
+</section>
+{% endblock %}
