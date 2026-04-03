@@ -130,7 +130,7 @@ CBOR-Felder → Spoolman-API
   consumed   → spool.used_weight (aus Auxiliary)
 ```
 
-## FilaScale — v2 Support
+## 🛠️ FilaScale v2 Support
 
 > **FilaScale v1** unterstützt OpenPrintTag **nicht** (PN532-Hardware).  
 > **FilaScale v2** plant PN5180-Support als Custom ESPHome Component.

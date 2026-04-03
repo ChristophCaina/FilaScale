@@ -1,5 +1,5 @@
-# Hardware — Dokumentation
+# 🔧 Hardware — Dokumentation
 
-## Inhalt
+## 📋 Inhalt
 
 - [Display Varianten](./display_de.md)

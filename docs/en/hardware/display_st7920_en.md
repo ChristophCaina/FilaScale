@@ -1,4 +1,4 @@
-# FilaScale — Display Design (ST7920 128×64)
+# 🖥️ Display Design (ST7920 128×64)
 
 The display is an **ST7920 128×64 pixel** monochrome LCD, compatible with the Ender 3 display module.
 This is the **standard variant** of FilaScale with full display functionality.
@@ -6,7 +6,7 @@ The layout is based on the **Silkscreen** font in three sizes.
 
 ---
 
-## Design Principles
+## 🎨 Design Principles
 
 - **Consistency**: All pages (except Home) follow the same basic layout
 - **Unified navigation**: Same symbols and labels on all screens
@@ -15,7 +15,7 @@ The layout is based on the **Silkscreen** font in three sizes.
 
 ---
 
-## Base Layout
+## 📐 Base Layout
 
 ### Standard Pages (Menu, Settings, Actions)
 
@@ -50,7 +50,7 @@ The layout is based on the **Silkscreen** font in three sizes.
 
 ---
 
-## Navigation Symbols
+## 🕹️ Navigation Symbols
 
 | Symbol | Meaning | Encoder Action |
 |--------|---------|----------------|
@@ -75,7 +75,7 @@ Only relevant actions are shown:
 
 ---
 
-## Screen Overview
+## 🗂️ Screen Overview
 
 ### Page 0 — Home (no tag)
 
@@ -232,7 +232,7 @@ _Only shown when auto-sync is not active._
 
 ---
 
-## Fonts
+## 🔤 Fonts
 
 | ID | Font | Size | Usage |
 |----|------|------|-------|
@@ -243,7 +243,7 @@ _Only shown when auto-sync is not active._
 
 ---
 
-## Progress Bar
+## 📊 Progress Bar
 
 The fill-level bar is composed of filled (`▓`) and empty (`░`) blocks:
 

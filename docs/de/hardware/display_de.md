@@ -1,16 +1,16 @@
-# FilaScale — Display Varianten
+# 🖥️ Display Varianten
 
 FilaScale unterstützt zwei Display-Varianten. Die Variante wird über eine
 Substitution in der Konfiguration gewählt.
 
-## Verfügbare Varianten
+## 📋 Verfügbare Varianten
 
 | Variante | Display | Auflösung | Doku |
 |----------|---------|-----------|------|
 | `st7920` | ST7920 (Ender 3) | 128×64 Pixel | [display_st7920_de.md](./display_st7920_de.md) |
 | `lcd1602` | LCD1602 (HD44780-kompatibel) | 16×2 Zeichen | [display_lcd1602_de.md](./display_lcd1602_de.md) |
 
-## Auswahl der Variante
+## ⚙️ Auswahl der Variante
 
 ```yaml
 # user-config.yaml
@@ -18,7 +18,7 @@ substitutions:
   display_type: "st7920"  # oder "st7789"
 ```
 
-## Kurzvergleich
+## ⚡ Kurzvergleich
 
 | Feature | ST7920 | HD44780 16×2 |
 |---------|--------|--------------|

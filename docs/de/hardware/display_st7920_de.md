@@ -1,4 +1,4 @@
-# FilaScale — Display Design (ST7920 128×64)
+# 🖥️ Display Design (ST7920 128×64)
 
 Das Display ist ein **ST7920 128×64 Pixel** Monochrom-LCD, kompatibel mit dem Ender 3 Display-Modul.
 Dieses ist die **Standard-Variante** von FilaScale mit vollem Display-Funktionsumfang.
@@ -6,7 +6,7 @@ Die Darstellung basiert auf dem **Silkscreen** Font in drei Größen.
 
 ---
 
-## Design-Prinzipien
+## 🎨 Design-Prinzipien
 
 - **Konsistenz**: Alle Pages (außer Home) folgen demselben Grundlayout
 - **Einheitliche Navigation**: Gleiche Symbole und Bezeichnungen auf allen Screens
@@ -15,7 +15,7 @@ Die Darstellung basiert auf dem **Silkscreen** Font in drei Größen.
 
 ---
 
-## Grundlayout
+## 📐 Grundlayout
 
 ### Standard-Pages (Menü, Einstellungen, Aktionen)
 
@@ -50,7 +50,7 @@ Die Darstellung basiert auf dem **Silkscreen** Font in drei Größen.
 
 ---
 
-## Navigations-Symbole
+## 🕹️ Navigations-Symbole
 
 | Symbol | Bedeutung | Encoder-Aktion |
 |--------|-----------|----------------|
@@ -75,7 +75,7 @@ Nur relevante Aktionen werden angezeigt:
 
 ---
 
-## Screen-Übersicht
+## 🗂️ Screen-Übersicht
 
 ### Page 0 — Home (kein Tag)
 
@@ -232,7 +232,7 @@ _Wird nur angezeigt wenn kein Auto-Sync aktiv ist._
 
 ---
 
-## Fonts
+## 🔤 Fonts
 
 | ID | Font | Größe | Verwendung |
 |----|------|-------|------------|
@@ -243,7 +243,7 @@ _Wird nur angezeigt wenn kein Auto-Sync aktiv ist._
 
 ---
 
-## Fortschrittsbalken
+## 📊 Fortschrittsbalken
 
 Der Füllstand-Balken wird aus gefüllten (`▓`) und leeren (`░`) Blöcken zusammengesetzt:
 

@@ -1,4 +1,4 @@
-# FilaScale — Display Design (LCD1602 16×2)
+# 🖥️ Display Design (LCD1602 16×2)
 
 Das Display ist ein **16×2 Zeichen LCD** (LCD1602 (HD44780-kompatibel), eine weit verbreitete
 und günstige Alternative zum ST7920 Ender-Display.
@@ -8,7 +8,7 @@ passen auf 16 Zeichen × 2 Zeilen.
 
 ---
 
-## Hardware
+## 🔩 Hardware
 
 | Eigenschaft | Wert |
 |-------------|------|
@@ -19,7 +19,7 @@ passen auf 16 Zeichen × 2 Zeilen.
 
 ---
 
-## Design-Prinzipien
+## 🎨 Design-Prinzipien
 
 - **Maximal 16 Zeichen pro Zeile** — kein Rahmen, keine Trennlinien
 - **Zeile 1**: Primäre Information (was ist es?)
@@ -29,7 +29,7 @@ passen auf 16 Zeichen × 2 Zeilen.
 
 ---
 
-## Zeichen-Budget
+## 📐 Zeichen-Budget
 
 ```
 1234567890123456   ← 16 Zeichen
@@ -40,7 +40,7 @@ Prusament PLA      ← 13 Zeichen ✓
 
 ---
 
-## Screen-Übersicht
+## 🗂️ Screen-Übersicht
 
 ### Home — kein Tag
 
@@ -171,7 +171,7 @@ v2026.4.0
 
 ---
 
-## Vergleich mit ST7920
+## ⚖️ Vergleich mit ST7920
 
 | Feature | ST7920 (128×64) | HD44780 (16×2) |
 |---------|----------------|----------------|
@@ -186,7 +186,7 @@ v2026.4.0
 
 ---
 
-## ESPHome Konfiguration
+## ⚙️ ESPHome Konfiguration
 
 ```yaml
 # I2C Variante (empfohlen — nur 2 Pins)
@@ -213,7 +213,7 @@ lcd_pcf8574:
 
 ---
 
-## Hinweise
+## 💡 Hinweise
 
 - **I2C Backpack** (PCF8574) empfohlen — spart 6 GPIO-Pins gegenüber 4-bit parallel
 - **Adresse**: Meist `0x27` oder `0x3F` — per I2C-Scanner prüfen
