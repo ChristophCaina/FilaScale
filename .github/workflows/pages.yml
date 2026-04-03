@@ -2,7 +2,7 @@ name: Build & Deploy GitHub Pages
 
 on:
   push:
-    branches: [website]
+    branches: [main]
     paths:
       - "website/**"
       - "docs/**"
@@ -53,8 +53,8 @@ jobs:
 
           # NFC standards
           mkdir -p website/src/de/docs/nfc-standards website/src/en/docs/nfc-standards
-          cp -r docs/de/nfc-standards/*.md website/src/de/docs/nfc-standards/
-          cp -r docs/en/nfc-standards/*.md website/src/en/docs/nfc-standards/
+          cp -r docs/nfc-standards/de/*.md website/src/de/docs/nfc-standards/
+          cp -r docs/nfc-standards/en/*.md website/src/en/docs/nfc-standards/
 
       - name: Add front matter to docs
         run: node scripts/add-frontmatter.js
