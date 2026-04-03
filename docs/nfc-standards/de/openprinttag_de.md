@@ -1,6 +1,8 @@
-# OpenPrintTag
+# 📡 OpenPrintTag
+[← NFC Standards](./README.md)
 
-## Übersicht
+
+## 📋 Übersicht
 
 | Eigenschaft       | Wert                                          |
 |-------------------|-----------------------------------------------|
@@ -15,7 +17,7 @@
 | **Spezifikation** | https://specs.openprinttag.org                |
 | **Projekt-URL**   | https://openprinttag.org                      |
 
-## Zweck
+## 🎯 Zweck
 
 OpenPrintTag ist Prusa Researchs offener NFC-Standard für Smart-Filamentspulen. Er wurde entwickelt um den reichhaltigsten Datensatz aller Formate bereitzustellen — inklusive vollständiger Druckparameter, Materialzusammensetzung und dynamischer Verbrauchsdaten. Prusament-Spulen werden seit **Oktober 2025** mit eingebetteten ICODE SLIX2-Tags geliefert.
 
@@ -33,7 +35,7 @@ OpenPrintTag ist Prusa Researchs offener NFC-Standard für Smart-Filamentspulen.
 | ACR1552U| ✅          | USB-Lesegerät für Desktop        |
 | Smartphone | ✅       | Android & iOS nativ              |
 
-## Tag-Format
+## 📄 Tag-Format
 
 OpenPrintTag verwendet **CBOR** (Concise Binary Object Representation) statt JSON. Das Format ist kompakt und strukturiert in drei Sektionen:
 
@@ -74,7 +76,7 @@ Wird nach jedem Druck aktualisiert.
 }
 ```
 
-## Vollständige Feldliste (Main-Sektion, Auswahl)
+## 📊 Vollständige Feldliste (Main-Sektion, Auswahl)
 
 | Feld               | Typ    | Beschreibung                              |
 |--------------------|--------|-------------------------------------------|
@@ -105,7 +107,7 @@ wood_fill, metal_fill, flexible, high_temp, water_soluble,
 uv_resistant, food_safe, ...
 ```
 
-## Vorteil gegenüber anderen Formaten
+## ⚡ Vorteil gegenüber anderen Formaten
 
 ```
 Format          | Felder | Offline | Eindeutig | Verbrauch
@@ -116,7 +118,7 @@ OpenSpool       |   7    |   ✅   |    ❌    |    ❌
 OpenPrintTag    |  68+   |   ✅   |    ✅    |    ✅
 ```
 
-## Spoolman-Integration
+## 🔗 Spoolman-Integration
 
 Aktuell gibt es **keine offizielle Spoolman-Integration** für OpenPrintTag. Die Daten müssen manuell gemappt werden:
 
@@ -143,7 +145,7 @@ FilaScale v2 (PN5180):
   ❌ OpenPrintTag schreiben (Hersteller-seitig, read-only)
 ```
 
-## Limitierungen
+## ⚠️ Limitierungen
 
 | Problem | Beschreibung |
 |---------|-------------|
@@ -153,7 +155,7 @@ FilaScale v2 (PN5180):
 | **Read-only für 3rd Party** | Main-Sektion nur vom Hersteller beschreibbar |
 | **ESPHome kein nativer Support** | Custom Component für PN5180 notwendig |
 
-## Kompatibilität
+## 🔌 Kompatibilität
 
 | System        | Unterstützung                          |
 |---------------|----------------------------------------|

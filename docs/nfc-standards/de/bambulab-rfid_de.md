@@ -1,6 +1,8 @@
-# BambuLab RFID Tag
+# 📡 BambuLab RFID Tag
+[← NFC Standards](./README.md)
 
-## Übersicht
+
+## 📋 Übersicht
 
 | Eigenschaft       | Wert                                      |
 |-------------------|-------------------------------------------|
@@ -12,7 +14,7 @@
 | **Offen**         | ❌ Proprietär — RSA-2048 signiert         |
 | **Reverse-Engineering** | Community-dokumentiert              |
 
-## Zweck
+## 🎯 Zweck
 
 BambuLab verwendet proprietäre RFID-Tags in ihren Filamentspulen, um das AMS (Automatic Material System) mit Materialinformationen zu versorgen. Die Tags sind **RSA-2048 signiert** — eigene Tags können nicht erstellt werden.
 
@@ -23,7 +25,7 @@ BambuLab verwendet proprietäre RFID-Tags in ihren Filamentspulen, um das AMS (A
 > - **Proprietäres Format**: Keine offizielle Dokumentation vorhanden
 > - **Lesen ist möglich**: Community hat Format vollständig reverse-engineered
 
-## Tag-Format (Binär, Reverse-Engineered)
+## 🔍 Tag-Format (Binär, Reverse-Engineered)
 
 Der Tag ist in **16 Sektoren** aufgeteilt. Jeder Sektor hat 4 Blöcke à 16 Bytes.
 
@@ -68,7 +70,7 @@ Sektor 4: Temperaturen
 
 > Alle Ganzzahlen sind **Little-Endian**.
 
-## Verschlüsselung
+## 🔐 Verschlüsselung
 
 ### CRYPTO1 (Sektor-Schlüssel)
 
@@ -90,7 +92,7 @@ Sektoren 10-15: 96 Bytes Signatur
 
 **Konsequenz:** Es ist **nicht möglich** eigene BambuLab-kompatible Tags zu erstellen. Nur exakte Klone (inklusive UID) auf "Magic" MIFARE-Tags funktionieren.
 
-## Lesen mit PN532
+## 💻 Lesen mit PN532
 
 Das Lesen ist möglich wenn die Sektor-Schlüssel bekannt sind:
 
@@ -105,7 +107,7 @@ for sector in range(0, 10):  # Sektoren 10-15 = Signatur
     # Daten verarbeiten...
 ```
 
-## Vergleich mit anderen Formaten
+## ⚖️ Vergleich mit anderen Formaten
 
 ```
 BambuLab    → proprietär, RSA-geschützt, kein Schreiben
@@ -114,7 +116,7 @@ FilaMan     → offen, Spoolman-Integration
 OpenPrintTag→ offen, reichhaltigste Daten, falscher Standard für Bambu
 ```
 
-## Alternativer Ansatz: MQTT statt NFC
+## 📶 Alternativer Ansatz: MQTT statt NFC
 
 Da BambuLab-Tags nicht selbst beschrieben werden können, ist die sinnvollere Alternative die **direkte MQTT-Kommunikation** mit dem Drucker:
 
@@ -128,7 +130,7 @@ FilaScale / OpenSpool liest Tag (beliebiges Format)
 
 Dies umgeht die NFC-Signaturprüfung vollständig.
 
-## Limitierungen
+## ⚠️ Limitierungen
 
 | Problem | Beschreibung |
 |---------|-------------|
@@ -138,7 +140,7 @@ Dies umgeht die NFC-Signaturprüfung vollständig.
 | **Kein NDEF** | Standard-NFC-Apps können Tag nicht lesen |
 | **Key-Berechnung nötig** | Erhöhter Implementierungsaufwand |
 
-## FilaScale Support
+## 🛠️ FilaScale Support
 
 | Funktion | Status |
 |----------|--------|
@@ -146,7 +148,7 @@ Dies umgeht die NFC-Signaturprüfung vollständig.
 | Tag schreiben | ❌ Nicht möglich |
 | MQTT-Alternative | 🔲 Geplant v2 |
 
-## Kompatibilität
+## 🔌 Kompatibilität
 
 | System        | Unterstützung                               |
 |---------------|---------------------------------------------|

@@ -1,6 +1,8 @@
-# FilaMan Manufacturer Tag
+# 🏷️ FilaMan Manufacturer Tag
+[← NFC Standards](./README.md)
 
-## Overview
+
+## 📋 Overview
 
 | Property          | Value                             |
 |-------------------|-----------------------------------|
@@ -11,13 +13,13 @@
 | **Smartphone**    | Android & iOS                     |
 | **Open**          | Yes (MIT License)                 |
 
-## Purpose
+## 🎯 Purpose
 
 The FilaMan Manufacturer Tag is intended for **pre-loaded spools from filament manufacturers**. It contains all relevant product data directly on the tag, allowing FilaMan (or compatible systems) to automatically create the manufacturer, filament, and spool in Spoolman — without manual input.
 
 **First commercial adopter:** [Recyclingfabrik](https://www.recyclingfabrik.com) — will soon ship spools with this tag format.
 
-## Tag Format
+## 📄 Tag Format
 
 ```json
 {
@@ -32,7 +34,7 @@ The FilaMan Manufacturer Tag is intended for **pre-loaded spools from filament m
 }
 ```
 
-## Fields
+## 📊 Fields
 
 | Field | Name           | Type   | Required | Description                               |
 |-------|----------------|--------|----------|-------------------------------------------|
@@ -47,7 +49,7 @@ The FilaMan Manufacturer Tag is intended for **pre-loaded spools from filament m
 
 > **Note:** Additional fields may be present — unknown fields should be ignored.
 
-## Detection
+## 🔍 Detection
 
 A tag is recognized as a FilaMan Manufacturer Tag when:
 - Field `b` (Brand) **and** `an` (Article Number) are present
@@ -61,7 +63,7 @@ Has JSON payload?
               └── → FilaMan Manufacturer Tag ✓
 ```
 
-## Linking with Spoolman
+## 🔗 Linking with Spoolman
 
 FilaMan uses the **article number (`an`)** as the linking key to Spoolman. For this, an extra field `nfc_id` must be configured in Spoolman for spools.
 
@@ -101,7 +103,7 @@ First scan (no sm_id):
   5. All subsequent scans: direct match via sm_id ✓
 ```
 
-## NDEF Record Structure
+## 🗂️ NDEF Record Structure
 
 ```
 NDEF Message
@@ -112,7 +114,7 @@ NDEF Message
         └── Payload: {"b":"Recyclingfabrik","t":"PETG",...}
 ```
 
-## Example (ESPHome Reading)
+## 💻 Example (ESPHome Reading)
 
 ```yaml
 on_tag:
@@ -132,7 +134,7 @@ on_tag:
         }
 ```
 
-## Compatibility
+## 🔌 Compatibility
 
 | System      | Support                              |
 |-------------|--------------------------------------|

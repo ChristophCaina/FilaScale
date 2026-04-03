@@ -1,6 +1,8 @@
-# BambuLab RFID Tag
+# 📡 BambuLab RFID Tag
+[← NFC Standards](./README.md)
 
-## Overview
+
+## 📋 Overview
 
 | Property          | Value                                     |
 |-------------------|-------------------------------------------|
@@ -12,7 +14,7 @@
 | **Open**          | ❌ Proprietary — RSA-2048 signed          |
 | **Reverse-Engineering** | Community-documented              |
 
-## Purpose
+## 🎯 Purpose
 
 BambuLab uses proprietary RFID tags in their filament spools to supply the AMS (Automatic Material System) with material information. The tags are **RSA-2048 signed** — custom tags cannot be created.
 
@@ -23,7 +25,7 @@ BambuLab uses proprietary RFID tags in their filament spools to supply the AMS (
 > - **Proprietary format**: No official documentation available
 > - **Reading is possible**: Community has fully reverse-engineered the format
 
-## Tag Format (Binary, Reverse-Engineered)
+## 🔍 Tag Format (Binary, Reverse-Engineered)
 
 The tag is divided into **16 sectors**. Each sector has 4 blocks of 16 bytes.
 
@@ -68,7 +70,7 @@ Sector 4: Temperatures
 
 > All integers are **Little-Endian**.
 
-## Encryption
+## 🔐 Encryption
 
 ### CRYPTO1 (Sector Keys)
 
@@ -90,7 +92,7 @@ Sectors 10-15: 96 bytes signature
 
 **Consequence:** It is **not possible** to create custom BambuLab-compatible tags. Only exact clones (including UID) on "Magic" MIFARE tags work.
 
-## Reading with PN532
+## 💻 Reading with PN532
 
 Reading is possible when the sector keys are known:
 
@@ -105,7 +107,7 @@ for sector in range(0, 10):  # Sectors 10-15 = signature
     # Process data...
 ```
 
-## Comparison with Other Formats
+## ⚖️ Comparison with Other Formats
 
 ```
 BambuLab    → proprietary, RSA-protected, no writing
@@ -114,7 +116,7 @@ FilaMan     → open, Spoolman integration
 OpenPrintTag→ open, richest data, wrong standard for Bambu
 ```
 
-## Alternative Approach: MQTT Instead of NFC
+## 📶 Alternative Approach: MQTT Instead of NFC
 
 Since BambuLab tags cannot be written to, the more practical alternative is **direct MQTT communication** with the printer:
 
@@ -128,7 +130,7 @@ FilaScale / OpenSpool reads tag (any format)
 
 This bypasses NFC signature verification entirely.
 
-## Limitations
+## ⚠️ Limitations
 
 | Problem | Description |
 |---------|-------------|
@@ -138,7 +140,7 @@ This bypasses NFC signature verification entirely.
 | **No NDEF** | Standard NFC apps cannot read the tag |
 | **Key calculation required** | Increased implementation effort |
 
-## FilaScale Support
+## 🛠️ FilaScale Support
 
 | Function | Status |
 |----------|--------|
@@ -146,7 +148,7 @@ This bypasses NFC signature verification entirely.
 | Tag writing | ❌ Not possible |
 | MQTT alternative | 🔲 Planned v2 |
 
-## Compatibility
+## 🔌 Compatibility
 
 | System        | Support                                     |
 |---------------|---------------------------------------------|

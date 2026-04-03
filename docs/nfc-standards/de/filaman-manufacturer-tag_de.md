@@ -1,6 +1,8 @@
-# FilaMan Hersteller-Tag (Manufacturer Tag)
+# 🏷️ FilaMan Hersteller-Tag (Manufacturer Tag)
+[← NFC Standards](./README.md)
 
-## Übersicht
+
+## 📋 Übersicht
 
 | Eigenschaft       | Wert                              |
 |-------------------|-----------------------------------|
@@ -11,13 +13,13 @@
 | **Smartphone**    | Android & iOS                     |
 | **Offen**         | Ja (MIT Lizenz)                   |
 
-## Zweck
+## 🎯 Zweck
 
 Der FilaMan Hersteller-Tag ist für **vorbestückte Spulen von Filamentherstellern** gedacht. Er enthält alle relevanten Produktdaten direkt auf dem Tag, sodass FilaMan (oder kompatible Systeme) automatisch Hersteller, Filament und Spule in Spoolman anlegen können — ohne manuelle Eingabe.
 
 **Erster kommerzieller Anwender:** [Recyclingfabrik](https://www.recyclingfabrik.com) — wird in Kürze Spulen mit diesem Tag-Format liefern.
 
-## Tag-Format
+## 📄 Tag-Format
 
 ```json
 {
@@ -32,7 +34,7 @@ Der FilaMan Hersteller-Tag ist für **vorbestückte Spulen von Filamentherstelle
 }
 ```
 
-## Felder
+## 📊 Felder
 
 | Feld  | Name              | Typ    | Pflicht | Beschreibung                              |
 |-------|-------------------|--------|---------|-------------------------------------------|
@@ -47,7 +49,7 @@ Der FilaMan Hersteller-Tag ist für **vorbestückte Spulen von Filamentherstelle
 
 > **Hinweis:** Es können weitere Felder vorhanden sein — unbekannte Felder sollten ignoriert werden.
 
-## Erkennung
+## 🔍 Erkennung
 
 Ein Tag wird als FilaMan Hersteller-Tag erkannt wenn:
 - Feld `b` (Brand) **und** `an` (Article Number) vorhanden sind
@@ -61,7 +63,7 @@ Hat JSON-Payload?
               └── → FilaMan Hersteller-Tag ✓
 ```
 
-## Verknüpfung mit Spoolman
+## 🔗 Verknüpfung mit Spoolman
 
 FilaMan nutzt die **Artikelnummer (`an`)** als Verknüpfungsschlüssel zu Spoolman. Dafür muss in Spoolman ein Extra-Feld `nfc_id` für Spulen konfiguriert sein.
 
@@ -101,7 +103,7 @@ Erster Scan (kein sm_id):
   5. Alle Folge-Scans: direkter Treffer via sm_id ✓
 ```
 
-## NDEF Record Struktur
+## 🗂️ NDEF Record Struktur
 
 ```
 NDEF Message
@@ -112,7 +114,7 @@ NDEF Message
         └── Payload: {"b":"Recyclingfabrik","t":"PETG",...}
 ```
 
-## Beispiel (ESPHome Lesen)
+## 💻 Beispiel (ESPHome Lesen)
 
 ```yaml
 on_tag:
@@ -132,7 +134,7 @@ on_tag:
         }
 ```
 
-## Kompatibilität
+## 🔌 Kompatibilität
 
 | System      | Unterstützung                        |
 |-------------|--------------------------------------|

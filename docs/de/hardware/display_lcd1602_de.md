@@ -1,5 +1,7 @@
 # 🖥️ Display Design (LCD1602 16×2)
 
+[← Zurück zur Hardware-Dokumentation](./README.md)
+
 Das Display ist ein **16×2 Zeichen LCD** (LCD1602 (HD44780-kompatibel), eine weit verbreitete
 und günstige Alternative zum ST7920 Ender-Display.
 

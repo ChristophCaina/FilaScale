@@ -1,5 +1,7 @@
 # 🖥️ Display Design (ST7920 128×64)
 
+[← Back to Hardware Documentation](./README.md)
+
 The display is an **ST7920 128×64 pixel** monochrome LCD, compatible with the Ender 3 display module.
 This is the **standard variant** of FilaScale with full display functionality.
 The layout is based on the **Silkscreen** font in three sizes.

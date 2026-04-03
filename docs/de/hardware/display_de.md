@@ -1,5 +1,7 @@
 # 🖥️ Display Varianten
 
+[← Zurück zur Hardware-Dokumentation](./README.md)
+
 FilaScale unterstützt zwei Display-Varianten. Die Variante wird über eine
 Substitution in der Konfiguration gewählt.
 
