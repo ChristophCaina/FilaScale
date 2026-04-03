@@ -1,6 +1,8 @@
-# OpenPrintTag
+# 📡 OpenPrintTag
+[← NFC Standards](./README.md)
 
-## Overview
+
+## 📋 Overview
 
 | Property          | Value                                         |
 |-------------------|-----------------------------------------------|
@@ -15,7 +17,7 @@
 | **Specification** | https://specs.openprinttag.org                |
 | **Project URL**   | https://openprinttag.org                      |
 
-## Purpose
+## 🎯 Purpose
 
 OpenPrintTag is Prusa Research's open NFC standard for smart filament spools. It was developed to provide the richest dataset of all formats — including complete printing parameters, material composition, and dynamic consumption data. Prusament spools have been shipped with embedded ICODE SLIX2 tags since **October 2025**.
 
@@ -33,7 +35,7 @@ OpenPrintTag is Prusa Research's open NFC standard for smart filament spools. It
 | ACR1552U   | ✅        | USB reader for desktop           |
 | Smartphone | ✅        | Android & iOS natively           |
 
-## Tag Format
+## 📄 Tag Format
 
 OpenPrintTag uses **CBOR** (Concise Binary Object Representation) instead of JSON. The format is compact and structured in three sections:
 
@@ -74,7 +76,7 @@ Updated after each print.
 }
 ```
 
-## Complete Field List (Main Section, Selection)
+## 📊 Complete Field List (Main Section, Selection)
 
 | Field              | Type   | Description                               |
 |--------------------|--------|-------------------------------------------|
@@ -105,7 +107,7 @@ wood_fill, metal_fill, flexible, high_temp, water_soluble,
 uv_resistant, food_safe, ...
 ```
 
-## Advantage Over Other Formats
+## ⚡ Advantage Over Other Formats
 
 ```
 Format          | Fields | Offline | Unique | Consumption
@@ -116,7 +118,7 @@ OpenSpool       |   7    |   ✅   |   ❌   |    ❌
 OpenPrintTag    |  68+   |   ✅   |   ✅   |    ✅
 ```
 
-## Spoolman Integration
+## 🔗 Spoolman Integration
 
 Currently there is **no official Spoolman integration** for OpenPrintTag. Data must be mapped manually:
 
@@ -130,7 +132,7 @@ CBOR fields → Spoolman API
   consumed   → spool.used_weight (from Auxiliary)
 ```
 
-## FilaScale — v2 Support
+## 🛠️ FilaScale v2 Support
 
 > **FilaScale v1** does **not** support OpenPrintTag (PN532 hardware).  
 > **FilaScale v2** plans PN5180 support as a custom ESPHome component.
@@ -143,7 +145,7 @@ FilaScale v2 (PN5180):
   ❌ OpenPrintTag writing (manufacturer-side, read-only)
 ```
 
-## Limitations
+## ⚠️ Limitations
 
 | Problem | Description |
 |---------|-------------|
@@ -153,7 +155,7 @@ FilaScale v2 (PN5180):
 | **Read-only for 3rd party** | Main section writable only by the manufacturer |
 | **No native ESPHome support** | Custom component for PN5180 required |
 
-## Compatibility
+## 🔌 Compatibility
 
 | System        | Support                                |
 |---------------|----------------------------------------|

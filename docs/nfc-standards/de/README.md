@@ -1,8 +1,10 @@
-# NFC Tag Standards — Dokumentation
+# 📡 NFC Tag Standards — Dokumentation
+
+[← Zurück zur Dokumentation](../../de/README.md)
 
 Dieser Ordner enthält die Dokumentation der verschiedenen NFC-Tag-Formate die im 3D-Druck-Ökosystem eingesetzt werden.
 
-## Übersicht
+## 📋 Übersicht
 
 | Standard | Datei | NFC | Chip | Offen |
 |----------|-------|-----|------|-------|
@@ -12,7 +14,7 @@ Dieser Ordner enthält die Dokumentation der verschiedenen NFC-Tag-Formate die i
 | [OpenPrintTag](./openprinttag_de.md) | `openprinttag.md` | ISO 15693 | ICODE SLIX2 | ✅ |
 | [BambuLab RFID](./bambulab-rfid_de.md) | `bambulab-rfid.md` | ISO 14443A | MIFARE Classic | ❌ |
 
-## Hardware-Kompatibilität
+## 🔧 Hardware-Kompatibilität
 
 | Reader  | ISO 14443A | ISO 15693 | ESPHome |
 |---------|-----------|-----------|---------|
@@ -20,7 +22,7 @@ Dieser Ordner enthält die Dokumentation der verschiedenen NFC-Tag-Formate die i
 | PN5180  | ✅         | ✅         | 🔲 Custom Component |
 | RC522   | ✅         | ❌         | ✅ |
 
-## FilaScale Unterstützung
+## 🛠️ FilaScale Unterstützung
 
 | Standard | v1 Lesen | v1 Schreiben | v2 Lesen | v2 Schreiben |
 |----------|----------|--------------|----------|--------------|
