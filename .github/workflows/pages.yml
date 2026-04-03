@@ -1,0 +1,77 @@
+name: Build & Deploy GitHub Pages
+
+on:
+  push:
+    branches: [website]
+    paths:
+      - "src/**"
+      - "docs/**"
+      - ".eleventy.js"
+      - "package.json"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: "npm"
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Copy docs into Eleventy source tree
+        run: |
+          # Hardware docs
+          mkdir -p src/de/docs/hardware src/en/docs/hardware
+          cp -r docs/de/hardware/*.md src/de/docs/hardware/
+          cp -r docs/en/hardware/*.md src/en/docs/hardware/
+
+          # Firmware docs
+          mkdir -p src/de/docs/firmware src/en/docs/firmware
+          cp -r docs/de/firmware/*.md src/de/docs/firmware/
+          cp -r docs/en/firmware/*.md src/en/docs/firmware/
+
+          # NFC standards
+          mkdir -p src/de/docs/nfc-standards src/en/docs/nfc-standards
+          cp -r docs/nfc-standards/de/*.md src/de/docs/nfc-standards/
+          cp -r docs/nfc-standards/en/*.md src/en/docs/nfc-standards/
+
+      - name: Add front matter to docs
+        run: node scripts/add-frontmatter.js
+
+      - name: Build with Eleventy
+        run: npm run build
+        env:
+          ELEVENTY_ENV: production
+
+      - name: Upload Pages artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: _site
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4

@@ -1,6 +1,12 @@
 # VSCode
 .vscode
 
+# Eleventy / Node
+node_modules/
+_site/
+.cache/
+.eleventy-cache/
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[codz]
