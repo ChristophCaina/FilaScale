@@ -10,12 +10,17 @@
   },
   "hero": {
     "title": "FilaScale",
-    "subtitle": "ESPHome-basierte Filamentwaage mit NFC-Unterstützung",
+    "subtitle": "Präzise Filamentwaage auf ESP32-Basis — liest NFC-Tags, spricht Home Assistant und Spoolman.",
     "ctaInstall": "Jetzt installieren",
     "ctaDocs": "Dokumentation"
   },
+  "integrations": {
+    "label": "Kompatibel mit"
+  },
   "features": {
-    "title": "Features",
+    "label": "Was FilaScale kann",
+    "title": "Alles für deine Filamentverwaltung",
+    "subtitle": "Von der Gewichtsmessung bis zur automatischen Spulen-Erkennung — FilaScale integriert sich nahtlos in dein Maker-Setup.",
     "weight": {
       "title": "Gewichtsmessung",
       "desc": "Präzise HX711-basierte Gewichtsmessung mit automatischem Tare"
