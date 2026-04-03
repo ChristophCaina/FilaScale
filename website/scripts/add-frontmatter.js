@@ -5,11 +5,13 @@
 
 const fs = require("fs");
 const path = require("path");
-const glob = require("fs").readdirSync;
+
+// Resolve paths relative to this script's location (website/scripts/)
+const websiteDir = path.join(__dirname, "..");
 
 const docRoots = [
-  { dir: "src/de/docs", lang: "de", prefix: "/de/docs" },
-  { dir: "src/en/docs", lang: "en", prefix: "/en/docs" },
+  { dir: path.join(websiteDir, "src/de/docs"), lang: "de", prefix: "/de/docs" },
+  { dir: path.join(websiteDir, "src/en/docs"), lang: "en", prefix: "/en/docs" },
 ];
 
 function walk(dir) {
