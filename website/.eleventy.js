@@ -40,6 +40,7 @@ module.exports = function (eleventyConfig) {
   );
 
   return {
+    pathPrefix: "/FilaScale/",
     dir: {
       input: "src",
       output: "_site",
