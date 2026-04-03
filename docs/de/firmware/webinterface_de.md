@@ -1,11 +1,13 @@
 # 📊 Web-Interface
 
+[← Zurück zur Firmware-Dokumentation](./README.md)
+
 FilaScale verfügt über ein eingebautes Web-Interface, das direkt über jeden Browser im lokalen Netzwerk erreichbar ist — ohne App, ohne Home Assistant.
 Das Interface basiert auf dem **ESPHome Web Server v3** und unterstützt automatisch Light und Dark Mode basierend auf den Systemeinstellungen.
 
 ---
 
-## Zugriff auf das Interface
+## 🔗 Zugriff auf das Interface
 
 Browser öffnen und navigieren zu:
 
@@ -23,7 +25,7 @@ http://192.168.x.x
 
 ---
 
-## Interface-Übersicht
+## 🖼️ Interface-Übersicht
 
 ### Light Mode
 
@@ -37,7 +39,7 @@ http://192.168.x.x
 
 ---
 
-## Sensoren und Steuerung
+## 📡 Sensoren und Steuerung
 
 ![Sensor and Control Section](https://christophcaina.github.io/filament_scale/images/webinterface-sensors.png)
 
@@ -51,7 +53,7 @@ http://192.168.x.x
 
 ---
 
-## Konfiguration
+## ⚙️ Konfiguration
 
 ![Configuration Section](https://christophcaina.github.io/filament_scale/images/webinterface-config.png)
 
@@ -68,7 +70,7 @@ http://192.168.x.x
 
 ---
 
-## Diagnose
+## 🔍 Diagnose
 
 | Entität | Typ | Beschreibung |
 | :--- | :--- | :--- |
@@ -87,13 +89,13 @@ http://192.168.x.x
 
 ---
 
-## OTA Update
+## 🔄 OTA Update
 
 Das Web-Interface bietet am unteren Ende der Seite eine manuelle OTA-Update-Option. Eine lokale `.bin`-Datei kann direkt ausgewählt und geflasht werden — ohne Home Assistant oder ESPHome Dashboard.
 
 ---
 
-## Features
+## ✨ Features
 
 - ✅ Keine App oder Home Assistant erforderlich
 - ✅ Light und Dark Mode (folgt Systemeinstellung)

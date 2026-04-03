@@ -1,8 +1,10 @@
-# Entities
+# 📋 Entities
+
+[← Back to Firmware Documentation](./README.md)
 
 Overview of all Home Assistant entities provided by FilaScale.
 
-## Sensors
+## 📡 Sensors
 
 | Entity ID | Name | Unit | Group | Description |
 |-----------|------|------|-------|-------------|
@@ -16,7 +18,7 @@ Overview of all Home Assistant entities provided by FilaScale.
 | `sensor.filascale_internal_temperature` | Chip Temperature | °C | Diagnostics | ESP32 chip temperature |
 
 
-## Text Sensors
+## 🔤 Text Sensors
 
 | Entity ID | Name | Group | Description |
 |-----------|------|-------|-------------|
@@ -41,14 +43,14 @@ Overview of all Home Assistant entities provided by FilaScale.
 | `Empty` | Tag detected, no NDEF content |
 | `` (empty) | No tag on the reader |
 
-## Binary Sensors
+## 🔘 Binary Sensors
 
 | Entity ID | Name | Group | Description |
 |-----------|------|-------|-------------|
 | `binary_sensor.filascale_nfc_tag_present` | Tag Present | NFC | Tag is placed on the reader |
 | `binary_sensor.filascale_backend_online` | Backend Online | Diagnostics | Spoolman/FilaMan reachable |
 
-## Buttons
+## 🔲 Buttons
 
 | Entity ID | Name | Group | Description |
 |-----------|------|-------|-------------|
@@ -56,7 +58,7 @@ Overview of all Home Assistant entities provided by FilaScale.
 | `button.filascale_sync` | Sync | Scale | Manually push weight to Spoolman |
 | `button.filascale_restart` | Restart Device | Diagnostics | Restart FilaScale |
 
-## Numbers
+## 🔢 Numbers
 
 | Entity ID | Name | Min | Max | Step | Group | Description |
 |-----------|------|-----|-----|------|-------|-------------|
@@ -64,13 +66,13 @@ Overview of all Home Assistant entities provided by FilaScale.
 | `number.filascale_empty_spool_weight` | Empty Spool Weight | 0 | 500 | 1 | Configuration | Empty spool weight in grams |
 | `number.filascale_total_filament_weight` | Total Filament Weight | 0 | 3000 | 1 | Configuration | Total filament weight (new) in grams |
 
-## Text (Configuration)
+## ⌨️ Text (Configuration)
 
 | Entity ID | Name | Group | Description |
 |-----------|------|-------|-------------|
 | `text.filascale_backend_url` | Backend URL | Configuration | URL of the backend (e.g. `http://192.168.1.100:7912`) |
 
-## Web Server Grouping (v3)
+## 🌐 Web Server Grouping (v3)
 
 ```yaml
 web_server:
@@ -101,7 +103,7 @@ web_server:
 | **Configuration** | Backend URL, Calibration Factor, Empty Spool Weight, Total Filament Weight |
 | **Diagnostics** | Backend Online, Scale Raw, Color Hex, Article Nr, Tag UID, SSID, IP Address, Uptime, Restart |
 
-## Internal Entities (not visible in HA)
+## 🔒 Internal Entities (not visible in HA)
 
 | ID | Description |
 |----|-------------|
@@ -109,7 +111,7 @@ web_server:
 | `spoolman_spool_id` | Current spool ID (internal, exposed via `active_spool_id`) |
 | `nfc_last_tag_uid` | Last tag UID (internal, exposed via `nfc_tag_uid`) |
 
-## Planned
+## 🗓️ Planned
 
 | Entity | Description | Version |
 |--------|-------------|---------|
