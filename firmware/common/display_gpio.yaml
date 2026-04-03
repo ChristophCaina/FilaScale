@@ -1,0 +1,4 @@
+# ========================================================================
+#  Display Component for 16x2 Display via GPIO
+#  https://esphome.io/components/display/lcd_display/#lcd_gpio-component
+# ========================================================================
