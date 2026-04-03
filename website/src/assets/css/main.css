@@ -6,10 +6,10 @@
 /* --- Design Tokens --- */
 :root {
   /* Core palette */
-  --color-primary:       #f97316;
-  --color-primary-dark:  #ea6b0e;
-  --color-primary-light: #fb923c;
-  --color-primary-glow:  rgba(249, 115, 22, 0.12);
+  --color-primary:       #22d3ee;
+  --color-primary-dark:  #0891b2;
+  --color-primary-light: #67e8f9;
+  --color-primary-glow:  rgba(34, 211, 238, 0.12);
   --color-accent:        #06b6d4;
 
   /* Backgrounds */
@@ -44,7 +44,7 @@
   /* Shadows */
   --shadow-sm:   0 1px 3px rgba(0,0,0,.5);
   --shadow-md:   0 4px 20px rgba(0,0,0,.6);
-  --shadow-glow: 0 0 40px rgba(249,115,22,.15);
+  --shadow-glow: 0 0 40px rgba(34,211,238,.15);
 
   /* Layout */
   --container: 1200px;
@@ -105,11 +105,11 @@ img { max-width: 100%; }
 .btn-primary {
   background: var(--color-primary);
   color: #fff;
-  box-shadow: 0 4px 14px rgba(249,115,22,.35);
+  box-shadow: 0 4px 14px rgba(34,211,238,.25);
 }
 .btn-primary:hover {
   background: var(--color-primary-light);
-  box-shadow: 0 6px 20px rgba(249,115,22,.45);
+  box-shadow: 0 6px 20px rgba(34,211,238,.35);
 }
 
 .btn-secondary {
@@ -250,7 +250,7 @@ img { max-width: 100%; }
   right: 5%;
   width: 600px;
   height: 600px;
-  background: radial-gradient(ellipse, rgba(249,115,22,.18) 0%, transparent 70%);
+  background: radial-gradient(ellipse, rgba(34,211,238,.15) 0%, transparent 70%);
   pointer-events: none;
 }
 
@@ -284,7 +284,7 @@ img { max-width: 100%; }
   color: var(--color-text-muted);
   background: var(--color-surface-2);
 }
-.hero-badge.badge-esphome { border-color: rgba(249,115,22,.4); color: var(--color-primary-light); background: rgba(249,115,22,.08); }
+.hero-badge.badge-esphome { border-color: rgba(34,211,238,.4); color: var(--color-primary-light); background: rgba(34,211,238,.08); }
 .hero-badge.badge-ha      { border-color: rgba(6,182,212,.4);  color: var(--color-accent);         background: rgba(6,182,212,.07); }
 .hero-badge.badge-oss     { border-color: rgba(34,197,94,.4);  color: #4ade80;                     background: rgba(34,197,94,.07); }
 
@@ -329,7 +329,7 @@ img { max-width: 100%; }
   width: 220px;
   height: 220px;
   opacity: .9;
-  filter: drop-shadow(0 0 30px rgba(249,115,22,.3));
+  filter: drop-shadow(0 0 30px rgba(34,211,238,.2));
 }
 
 /* --- Features --- */
@@ -386,9 +386,9 @@ img { max-width: 100%; }
 }
 
 .feature-card:hover {
-  border-color: rgba(249,115,22,.35);
+  border-color: rgba(34,211,238,.25);
   transform: translateY(-4px);
-  box-shadow: 0 8px 30px rgba(0,0,0,.4), 0 0 0 1px rgba(249,115,22,.1);
+  box-shadow: 0 8px 30px rgba(0,0,0,.4), 0 0 0 1px rgba(34,211,238,.1);
 }
 
 .feature-card:hover::before { opacity: 1; }
@@ -468,7 +468,7 @@ img { max-width: 100%; }
 /* --- CTA section --- */
 .cta {
   text-align: center;
-  background: linear-gradient(180deg, transparent 0%, rgba(249,115,22,.05) 100%);
+  background: linear-gradient(180deg, transparent 0%, rgba(34,211,238,.05) 100%);
   border-top: 1px solid var(--color-border);
   position: relative;
   overflow: hidden;
@@ -482,7 +482,7 @@ img { max-width: 100%; }
   transform: translateX(-50%);
   width: 600px;
   height: 300px;
-  background: radial-gradient(ellipse, rgba(249,115,22,.08) 0%, transparent 70%);
+  background: radial-gradient(ellipse, rgba(34,211,238,.08) 0%, transparent 70%);
   pointer-events: none;
 }
 
@@ -513,7 +513,7 @@ img { max-width: 100%; }
   top: 0; right: 0;
   width: 400px;
   height: 100%;
-  background: radial-gradient(ellipse at right center, rgba(249,115,22,.07) 0%, transparent 70%);
+  background: radial-gradient(ellipse at right center, rgba(34,211,238,.07) 0%, transparent 70%);
   pointer-events: none;
 }
 .page-header h1 {
@@ -590,7 +590,7 @@ img { max-width: 100%; }
   justify-content: center;
   font-size: .85rem;
   flex-shrink: 0;
-  box-shadow: 0 2px 8px rgba(249,115,22,.35);
+  box-shadow: 0 2px 8px rgba(34,211,238,.25);
 }
 .steps-list li span { padding-top: .2rem; }
 
@@ -642,7 +642,7 @@ img { max-width: 100%; }
   padding: 1.75rem;
   transition: border-color .2s;
 }
-.docs-category:hover { border-color: rgba(249,115,22,.3); }
+.docs-category:hover { border-color: rgba(34,211,238,.2); }
 
 .docs-category-title {
   font-size: 1.1rem;
