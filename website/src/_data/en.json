@@ -10,12 +10,17 @@
   },
   "hero": {
     "title": "FilaScale",
-    "subtitle": "ESPHome-based filament scale with NFC support",
+    "subtitle": "Precise ESP32-based filament scale — reads NFC tags, talks to Home Assistant and Spoolman.",
     "ctaInstall": "Install now",
     "ctaDocs": "Documentation"
   },
+  "integrations": {
+    "label": "Works with"
+  },
   "features": {
-    "title": "Features",
+    "label": "What FilaScale does",
+    "title": "Everything for your filament management",
+    "subtitle": "From precise weight measurement to automatic spool detection — FilaScale integrates seamlessly into your maker setup.",
     "weight": {
       "title": "Weight Measurement",
       "desc": "Precise HX711-based weight measurement with automatic tare"
