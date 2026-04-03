@@ -1,0 +1,78 @@
+# ============================================================
+# filascale.yaml
+# Core package — contains ONLY functionality.
+#
+# This file is referenced by:
+#   - factory.yaml  (Web Installer initial flash)
+#   - User's local ESPHome config (after Take Control)
+# ============================================================
+
+substitutions:
+  name: "filascale"
+  friendly_name: "FilaScale"
+  device_comment: "Filament Scale with ESPHome"
+
+  # -- Backend IPs --
+  backend_ip: ""
+
+  # -- Scale calibration --
+  scale_calibration_factor: ""
+
+  # -- Pin assignments (ESP32 DevKit defaults) --
+  pin_status_led:    GPIO02
+  pin_display_clk:   GPIO18
+  pin_display_mosi:  GPIO23
+  pin_display_cs:    GPIO17
+  pin_encoder_a:     GPIO32
+  pin_encoder_b:     GPIO33
+  pin_encoder_btn:   GPIO19
+  pin_buzzer:        GPIO16
+  pin_scale_dt:      GPIO21
+  pin_scale_sck:     GPIO22
+  pin_i2c_sda:       GPIO13
+  pin_i2c_scl:       GPIO14
+  pin_stepper_step:  GPIO25
+  pin_stepper_dir:   GPIO26
+  pin_filament_sens: GPIO27
+  pin_speed_poti:    GPIO34
+  pin_addon_detect:  GPIO05
+
+esphome:
+  name: ${name}
+  friendly_name: ${friendly_name}
+  comment: ${comment}
+  min_version: "2024.6.0"
+  project:
+    name: filascale.filamentspoolscale
+    version: "2026.4.0"
+
+esp32:
+  board: esp32dev
+  framework:
+    type: esp-idf
+
+logger:
+
+web_server:
+  port: 80
+  version: 3
+  log: false
+  sorting_groups:
+    - id: group_scale
+      name: "Scale"
+      sorting_weight: 10
+    - id: group_filament
+      name: "Filament"
+      sorting_weight: 20
+    - id: group_nfc
+      name: "NFC"
+      sorting_weight: 30
+    - id: group_config
+      name: "Configuration"
+      sorting_weight: 40
+    - id: group_diagnostic
+      name: "Diagnose"
+      sorting_weight: 99
+
+http_request:
+  verify_ssl: false

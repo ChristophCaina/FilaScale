@@ -1,0 +1,2 @@
+# Verhindert, dass Nutzer das Template-System umgehen und "leere" Issues erstellen
+blank_issues_enabled: false

@@ -1,0 +1,26 @@
+name: "🚀 Feature Request / Wunsch"
+description: Propose a new idea (English / Deutsch)
+labels: ["enhancement"]
+body:
+  - type: markdown
+    attributes:
+      value: "### Suggest a new feature / Eine neue Funktion vorschlagen"
+  
+  - type: dropdown
+    id: area
+    attributes:
+      label: "Target Area / Zielbereich"
+      options:
+        - "Firmware"
+        - "Hardware"
+        - "Web / PWA"
+    validations:
+      required: true
+
+  - type: textarea
+    id: feature_description
+    attributes:
+      label: "Your Idea / Deine Idee"
+      description: "What should the new feature do? / Was soll die Funktion genau machen?"
+    validations:
+      required: true
