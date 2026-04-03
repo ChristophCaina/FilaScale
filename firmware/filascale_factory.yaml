@@ -1,9 +1,9 @@
 # ============================================================
-# factory.yaml
+# filascale_factory.yaml
 # Used ONLY for the Web Installer initial flash.
 #
 # Contains: wifi (AP/Improv), api (no key), ota, captive_portal
-# References filament-scale.yaml as a package.
+# References filascale.yaml as a package.
 #
 # After flashing:
 #   1. Improv WiFi → user enters credentials
