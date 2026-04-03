@@ -3,7 +3,7 @@
 # Core package — contains ONLY functionality.
 #
 # This file is referenced by:
-#   - factory.yaml  (Web Installer initial flash)
+#   - filascale_factory.yaml  (Web Installer initial flash)
 #   - User's local ESPHome config (after Take Control)
 # ============================================================
 
