@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="{{ i18n.lang }}">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="{{ description or i18n.hero.subtitle }}" />
+  <title>{% if title %}{{ title }} — {% endif %}FilaScale</title>
+  <link rel="stylesheet" href="/assets/css/main.css" />
+  <link rel="icon" href="/assets/img/favicon.svg" type="image/svg+xml" />
+  {% block head %}{% endblock %}
+</head>
+<body>
+  {% include "header.njk" %}
+
+  <main id="main-content">
+    {% block content %}{% endblock %}
+  </main>
+
+  {% include "footer.njk" %}
+
+  <script src="/assets/js/lang.js"></script>
+  {% block scripts %}{% endblock %}
+</body>
+</html>

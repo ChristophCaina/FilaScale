@@ -1,0 +1,83 @@
+---
+layout: layouts/base.njk
+i18n: en
+permalink: /en/install/
+title: Install
+---
+
+{% block head %}
+<script type="module" src="https://unpkg.com/esp-web-tools@10/dist/web/install-button.js"></script>
+{% endblock %}
+
+{% block content %}
+<div class="page-header section">
+  <div class="container">
+    <h1>{{ i18n.install.title }}</h1>
+    <p class="page-subtitle">{{ i18n.install.subtitle }}</p>
+  </div>
+</div>
+
+<section class="install-section section">
+  <div class="container">
+
+    <!-- Requirements -->
+    <div class="install-block">
+      <h2>{{ i18n.install.requirements }}</h2>
+      <ul class="requirements-list">
+        {% for req in i18n.install.reqList %}
+        <li>{{ req }}</li>
+        {% endfor %}
+      </ul>
+    </div>
+
+    <!-- Steps + Installer -->
+    <div class="install-layout">
+      <!-- Steps -->
+      <div class="install-steps">
+        <h2>{{ i18n.install.steps }}</h2>
+        <ol class="steps-list">
+          <li><span>{{ i18n.install.step1 }}</span></li>
+          <li><span>{{ i18n.install.step2 }}</span></li>
+          <li><span>{{ i18n.install.step3 }}</span></li>
+          <li><span>{{ i18n.install.step4 }}</span></li>
+          <li><span>{{ i18n.install.step5 }}</span></li>
+        </ol>
+      </div>
+
+      <!-- Web Installer Widget -->
+      <div class="installer-widget">
+        <h2>{{ i18n.install.variantLabel }}</h2>
+        <div class="variant-selector">
+          <label for="variant-select" class="visually-hidden">{{ i18n.install.variantLabel }}</label>
+          <select id="variant-select" class="variant-select">
+            <option value="filascale-pn532">{{ i18n.install.variants.pn532 }}</option>
+            <option value="filascale-pn5180">{{ i18n.install.variants.pn5180 }}</option>
+            <option value="filascale-st7920">{{ i18n.install.variants.st7920 }}</option>
+            <option value="filascale-lcd1602">{{ i18n.install.variants.lcd1602 }}</option>
+          </select>
+        </div>
+
+        <div id="installer-container" class="installer-container">
+          <esp-web-install-button
+            id="esp-install-btn"
+            manifest="/assets/firmware/filascale-pn532.json">
+            <button slot="activate" class="btn btn-primary btn-large btn-install">
+              {{ i18n.install.btnInstall }}
+            </button>
+            <span slot="unsupported">{{ i18n.install.notSupported }}</span>
+          </esp-web-install-button>
+        </div>
+
+        <p class="browser-hint" id="browser-warning" hidden>
+          {{ i18n.install.browserWarning }}
+        </p>
+      </div>
+    </div>
+
+  </div>
+</section>
+{% endblock %}
+
+{% block scripts %}
+<script src="/assets/js/installer.js"></script>
+{% endblock %}

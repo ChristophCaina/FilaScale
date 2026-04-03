@@ -1,0 +1,75 @@
+{
+  "lang": "en",
+  "langLabel": "English",
+  "langSwitch": "Deutsch",
+  "langSwitchUrl": "/de/",
+  "nav": {
+    "home": "Home",
+    "install": "Install",
+    "docs": "Documentation"
+  },
+  "hero": {
+    "title": "FilaScale",
+    "subtitle": "ESPHome-based filament scale with NFC support",
+    "ctaInstall": "Install now",
+    "ctaDocs": "Documentation"
+  },
+  "features": {
+    "title": "Features",
+    "weight": {
+      "title": "Weight Measurement",
+      "desc": "Precise HX711-based weight measurement with automatic tare"
+    },
+    "nfc": {
+      "title": "NFC Integration",
+      "desc": "Supports FilaMan, OpenSpool, OpenPrintTag and BambuLab RFID"
+    },
+    "ha": {
+      "title": "Home Assistant",
+      "desc": "Native ESPHome integration with automatic entity discovery"
+    },
+    "display": {
+      "title": "Display Support",
+      "desc": "ST7920 128×64 and LCD1602 16×2 as display variants"
+    }
+  },
+  "install": {
+    "title": "Web Installer",
+    "subtitle": "Install FilaScale directly in your browser — no USB driver, no terminal.",
+    "requirements": "Requirements",
+    "reqList": [
+      "Google Chrome or Microsoft Edge (Web Serial API required)",
+      "ESP32 development board connected via USB",
+      "USB cable with data lines (not charge-only)"
+    ],
+    "steps": "Installation Steps",
+    "step1": "Connect ESP32 to your computer via USB",
+    "step2": "Select firmware variant",
+    "step3": "Click \"Install\" and select the COM port",
+    "step4": "Wait for the installation to complete",
+    "step5": "After reboot: configure Wi-Fi in ESPHome",
+    "variantLabel": "Firmware Variant",
+    "variants": {
+      "pn532": "PN532 NFC Reader",
+      "pn5180": "PN5180 NFC Reader",
+      "st7920": "ST7920 Display",
+      "lcd1602": "LCD1602 Display"
+    },
+    "btnInstall": "Install",
+    "browserWarning": "⚠️ Web Serial is not supported by this browser. Please use Chrome or Edge.",
+    "notSupported": "Your browser does not support the Web Serial API."
+  },
+  "docs": {
+    "title": "Documentation",
+    "subtitle": "Complete documentation for hardware, firmware and NFC standards",
+    "sections": {
+      "hardware": "Hardware",
+      "firmware": "Firmware",
+      "nfc": "NFC Standards"
+    }
+  },
+  "footer": {
+    "license": "MIT License",
+    "github": "GitHub"
+  }
+}

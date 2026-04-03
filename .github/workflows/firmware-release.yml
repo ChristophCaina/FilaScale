@@ -1,0 +1,35 @@
+name: Build & Release Firmware
+
+on:
+  release:
+    types: [published]
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        variant: [pn532, pn5180, st7920, lcd1602]
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Build firmware — filascale-${{ matrix.variant }}
+        run: |
+          docker run --rm \
+            -v "${{ github.workspace }}:/config" \
+            ghcr.io/esphome/esphome:stable \
+            compile /config/firmware/filascale-${{ matrix.variant }}.yaml
+
+      - name: Upload factory binary as release asset
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          gh release upload "${{ github.event.release.tag_name }}" \
+            ".esphome/build/filascale/.pioenvs/filascale/firmware-factory.bin#filascale-${{ matrix.variant }}.factory.bin" \
+            --clobber
