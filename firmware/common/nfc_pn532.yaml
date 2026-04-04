@@ -45,9 +45,6 @@ pn532_i2c:
           ESP_LOGI("nfc", "Tag detected: %s", tag_id.c_str());
 
           if (!tag.has_ndef_message()) {
-              ESP_LOGI("nfc", "Empty tag + write pending: spool_id=%d", spool_id);
-              id(beep_confirm).execute();
-            } else {
               ESP_LOGI("nfc", "Empty tag — ready to write");
               id(beep_short).execute();
             }
