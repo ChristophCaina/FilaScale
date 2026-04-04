@@ -45,12 +45,7 @@ pn532_i2c:
           ESP_LOGI("nfc", "Tag detected: %s", tag_id.c_str());
 
           if (!tag.has_ndef_message()) {
-            if (id(filaman_component).write_pending) {
-              int spool_id = id(filaman_component).write_spool_id;
               ESP_LOGI("nfc", "Empty tag + write pending: spool_id=%d", spool_id);
-              // TODO: write spool_id to tag via ESPHome NFC write
-              // id(filaman_component).send_rfid_result(true, spool_id);
-              id(filaman_component).write_pending = false;
               id(beep_confirm).execute();
             } else {
               ESP_LOGI("nfc", "Empty tag — ready to write");
