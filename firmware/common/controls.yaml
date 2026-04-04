@@ -23,8 +23,9 @@ sensor:
       then:
         - lambda: |-
             int page = id(menu_page) + (int)x;
-            if (page < 0) page = max_page;
-            if (page > max_page) page = 0;
+            //Page Navigation will be done later
+            //if (page < 0) page = max_page;
+            //if (page > max_page) page = 0;
             id(menu_page) = page;
         - script.execute: beep_short
         # Reset encoder to zero after each step
