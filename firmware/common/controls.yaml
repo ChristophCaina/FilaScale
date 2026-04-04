@@ -22,8 +22,6 @@ sensor:
     on_value:
       then:
         - lambda: |-
-            // Determine max page (4 only if winder add-on present)
-            int max_page = id(winder_addon_detected) ? 4 : 3;
             int page = id(menu_page) + (int)x;
             if (page < 0) page = max_page;
             if (page > max_page) page = 0;
