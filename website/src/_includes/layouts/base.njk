@@ -7,18 +7,16 @@
   <title>{% if title %}{{ title }} — {% endif %}FilaScale</title>
   <link rel="stylesheet" href="{{ '/assets/css/main.css' | url }}" />
   <link rel="icon" href="{{ '/assets/img/favicon.svg' | url }}" type="image/svg+xml" />
-  {% block head %}{% endblock %}
 </head>
 <body>
   {% include "header.njk" %}
 
   <main id="main-content">
-    {% block content %}{% endblock %}
+    {{ content | safe }}
   </main>
 
   {% include "footer.njk" %}
 
   <script src="{{ '/assets/js/lang.js' | url }}"></script>
-  {% block scripts %}{% endblock %}
 </body>
 </html>
