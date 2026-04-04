@@ -35,14 +35,25 @@ for (const root of docRoots) {
     // Skip if front matter already present
     if (content.startsWith("---")) continue;
 
-    // Derive slug from filename (strip _de/_en suffix for URL)
-    const rel = path.relative(root.dir, file);
-    const slug = rel.replace(/\.(md)$/, "").replace(/_de|_en/, "");
-    const permalink = `${root.prefix}/${slug}/`;
+    const rel = path.relative(root.dir, file).replace(/\\/g, "/");
+    const basename = path.basename(file, ".md").toLowerCase();
+
+    let permalink;
+    if (basename === "readme") {
+      // README.md → directory index
+      // e.g. hardware/README.md → /de/docs/hardware/
+      const dir = path.dirname(rel);
+      permalink = dir === "." ? `${root.prefix}/` : `${root.prefix}/${dir}/`;
+    } else {
+      // Regular file — keep filename as-is (including _de/_en suffix)
+      // so URLs match the links in docs.njk
+      const slug = rel.replace(/\.md$/, "");
+      permalink = `${root.prefix}/${slug}/`;
+    }
 
     // Derive title from first H1
     const h1 = content.match(/^#\s+(.+)$/m);
-    const title = h1 ? h1[1].replace(/[^\w\s\(\)×\/\-–—]/gu, "").trim() : slug;
+    const title = h1 ? h1[1].replace(/[^\w\s\(\)×\/\-–—]/gu, "").trim() : basename;
 
     const fm = `---
 layout: layouts/doc.njk
