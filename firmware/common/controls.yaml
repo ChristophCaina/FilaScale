@@ -1,0 +1,71 @@
+# ============================================================
+# controls.yaml
+# Rotary encoder: menu navigation + button actions
+# ============================================================
+
+sensor:
+  - platform: rotary_encoder
+    id: encoder
+    name: "Encoder"
+    internal: true
+    pin_a:
+      number: ${pin_encoder_a}
+      mode:
+        input: true
+        pullup: true
+    pin_b:
+      number: ${pin_encoder_b}
+      mode:
+        input: true
+        pullup: true
+    resolution: 1
+    on_value:
+      then:
+        - lambda: |-
+            // Determine max page (4 only if winder add-on present)
+            int max_page = id(winder_addon_detected) ? 4 : 3;
+            int page = id(menu_page) + (int)x;
+            if (page < 0) page = max_page;
+            if (page > max_page) page = 0;
+            id(menu_page) = page;
+        - script.execute: beep_short
+        # Reset encoder to zero after each step
+        - sensor.rotary_encoder.set_value:
+            id: encoder
+            value: 0
+
+binary_sensor:
+  - platform: gpio
+    id: encoder_btn
+    name: "Encoder Button"
+    internal: true
+    pin:
+      number: ${pin_encoder_btn}
+      mode:
+        input: true
+        pullup: true
+      inverted: true
+    filters:
+      - delayed_on: 20ms
+      - delayed_off: 20ms
+    on_click:
+      - min_length: 50ms
+        max_length: 500ms
+        then:
+          - lambda: |-
+              switch (id(menu_page)) {
+                case 1:  // Tare
+                  id(btn_tare).press();
+                  break;
+                case 3:  // sync
+                  id(btn_sync).press();
+                  break;
+              }
+      # Long press → back to main page
+      - min_length: 800ms
+        max_length: 3000ms
+        then:
+          - globals.set:
+              id: menu_page
+              value: "0"
+          - script.execute: beep_short

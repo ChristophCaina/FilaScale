@@ -1,1 +1,226 @@
 
+# ============================================================
+# nfc.yaml
+# NFC/RFID spool tag reading (PN532 via I2C)
+#
+# Supports:
+#   1. Fast-Path Tags (sm_id present)
+#      → directly set spoolman_spool_id → sync
+#
+#   2. FilaMan Manufacturer Tags (b + an present, no sm_id)
+#      → publish brand, material, color etc. to HA
+#      → TODO: create vendor/filament/spool in Spoolman API
+#      → TODO: write sm_id back to tag
+#
+#   3. Simple custom tags (spool_id=XX format)
+#      → set spoolman_spool_id → sync
+#
+#   4. Empty tags → ready to write
+#
+#   5. Unknown format → log content
+#
+# Hardware: PN532 via I2C
+#   SDA → ${pin_i2c_sda}
+#   SCL → ${pin_i2c_scl}
+# ============================================================
+
+globals:
+  - id: nfc_last_tag_id
+    type: std::string
+    restore_value: false
+    initial_value: '""'
+
+i2c:
+  sda: ${pin_i2c_sda}
+  scl: ${pin_i2c_scl}
+  scan: false
+
+pn532_i2c:
+  id: nfc_reader
+  on_tag:
+    then:
+      - lambda: |-
+          std::string tag_id = x.c_str();
+          id(nfc_last_tag_id) = tag_id;
+          ESP_LOGI("nfc", "Tag detected: %s", tag_id.c_str());
+
+          if (!tag.has_ndef_message()) {
+            if (id(filaman_component).write_pending) {
+              int spool_id = id(filaman_component).write_spool_id;
+              ESP_LOGI("nfc", "Empty tag + write pending: spool_id=%d", spool_id);
+              // TODO: write spool_id to tag via ESPHome NFC write
+              // id(filaman_component).send_rfid_result(true, spool_id);
+              id(filaman_component).write_pending = false;
+              id(beep_confirm).execute();
+            } else {
+              ESP_LOGI("nfc", "Empty tag — ready to write");
+              id(beep_short).execute();
+            }
+            return;
+          }
+
+          auto records = tag.get_ndef_message()->get_records();
+          for (auto &record : records) {
+            std::string payload = record->get_payload();
+            ESP_LOGI("nfc", "NDEF payload: %s", payload.c_str());
+
+            // ── JSON payload? ──────────────────────────────
+            if (payload.find("{") != std::string::npos) {
+
+              // Fast-Path: sm_id present (supports both string "42" and integer 42)
+              auto sm_pos = payload.find("\"sm_id\"");
+              if (sm_pos != std::string::npos) {
+                auto val_pos = payload.find(":", sm_pos);
+                if (val_pos != std::string::npos) {
+                  // Skip whitespace and optional opening quote
+                  val_pos++;
+                  while (val_pos < payload.size() && (payload[val_pos] == ' ' || payload[val_pos] == '\t')) val_pos++;
+                  bool is_string = (payload[val_pos] == '"');
+                  if (is_string) val_pos++; // skip opening quote
+                  int sm_id = atoi(payload.c_str() + val_pos);
+                  if (sm_id > 0) {
+                    id(spoolman_spool_id) = sm_id;
+                    ESP_LOGI("nfc", "Fast-Path: sm_id=%d (%s)", sm_id, is_string ? "string" : "int");
+                    id(beep_confirm).execute();
+                    id(script_push_weight).execute();
+                    return;
+                  } else {
+                    ESP_LOGW("nfc", "sm_id found but value is 0 — treating as new tag");
+                  }
+                }
+              }
+
+              // Manufacturer Tag: b + an present
+              bool has_brand = payload.find("\"b\"") != std::string::npos;
+              bool has_artnr = payload.find("\"an\"") != std::string::npos;
+
+              if (has_brand && has_artnr) {
+                ESP_LOGI("nfc", "FilaMan manufacturer tag detected");
+
+                // Helper lambda to extract string value for a key
+                auto extract = [&](const std::string& key) -> std::string {
+                  auto kpos = payload.find("\"" + key + "\"");
+                  if (kpos == std::string::npos) return "";
+                  auto vpos = payload.find(":", kpos);
+                  if (vpos == std::string::npos) return "";
+                  vpos = payload.find("\"", vpos);
+                  if (vpos == std::string::npos) return "";
+                  auto epos = payload.find("\"", vpos + 1);
+                  if (epos == std::string::npos) return "";
+                  return payload.substr(vpos + 1, epos - vpos - 1);
+                };
+
+                std::string brand    = extract("b");
+                std::string artnr    = extract("an");
+                std::string material = extract("t");
+                std::string color    = extract("cn");
+                std::string color_hex= extract("c");
+                std::string et       = extract("et");
+                std::string bt       = extract("bt");
+                std::string sw       = extract("sw");
+
+                ESP_LOGI("nfc", "Brand: %s | Art: %s | Material: %s | Color: %s",
+                  brand.c_str(), artnr.c_str(), material.c_str(), color.c_str());
+
+                // Publish to HA text sensors
+                id(filament_brand).publish_state(brand);
+                id(filament_material).publish_state(material);
+                id(filament_color_name).publish_state(color);
+                id(filament_color_hex).publish_state(color_hex);
+                id(filament_article_nr).publish_state(artnr);
+
+                // Set spool weight from tag if available
+                if (!sw.empty()) {
+                  float spool_w = atof(sw.c_str());
+                  if (spool_w > 0) {
+                    auto call = id(num_spool_empty_weight).make_call();
+                    call.set_value(spool_w);
+                    call.perform();
+                    ESP_LOGI("nfc", "Spool weight set from tag: %.0fg", spool_w);
+                  }
+                }
+
+                id(beep_confirm).execute();
+                // TODO: create vendor/filament/spool in Spoolman
+                // TODO: write sm_id back to tag
+                return;
+              }
+
+              // Unknown JSON
+              ESP_LOGW("nfc", "Unknown JSON format on tag");
+              id(beep_short).execute();
+              return;
+            }
+
+            // ── Simple text format: spool_id=XX ───────────
+            auto pos = payload.find("spool_id=");
+            if (pos != std::string::npos) {
+              int spool_id = atoi(payload.substr(pos + 9).c_str());
+              if (spool_id > 0) {
+                id(spoolman_spool_id) = spool_id;
+                ESP_LOGI("nfc", "Simple tag: spool_id=%d", spool_id);
+                id(beep_confirm).execute();
+                id(script_push_weight).execute();
+                return;
+              }
+            }
+
+            // Unknown text format
+            ESP_LOGW("nfc", "Unknown tag format: %s", payload.c_str());
+            id(beep_short).execute();
+          }
+
+  on_tag_removed:
+    then:
+      - lambda: |-
+          ESP_LOGI("nfc", "Tag removed: %s", id(nfc_last_tag_id).c_str());
+          id(nfc_last_tag_id) = "";
+          // Clear manufacturer tag sensors
+          id(filament_brand).publish_state("");
+          id(filament_material).publish_state("");
+          id(filament_color_name).publish_state("");
+          id(filament_color_hex).publish_state("");
+          id(filament_article_nr).publish_state("");
+
+text_sensor:
+  # Current tag ID
+  - platform: template
+    id: nfc_tag_id
+    name: "NFC Tag ID"
+    icon: mdi:nfc
+    entity_category: diagnostic
+    lambda: "return id(nfc_last_tag_id);"
+    update_interval: 1s
+
+  # Manufacturer tag data
+  - platform: template
+    id: filament_brand
+    name: "Filament Brand"
+    icon: mdi:factory
+    lambda: "return {};"
+
+  - platform: template
+    id: filament_material
+    name: "Filament Material"
+    icon: mdi:chemical-weapon
+    lambda: "return {};"
+
+  - platform: template
+    id: filament_color_name
+    name: "Filament Color"
+    icon: mdi:palette
+    lambda: "return {};"
+
+  - platform: template
+    id: filament_color_hex
+    name: "FilamentColor Hex"
+    icon: mdi:pound
+    entity_category: diagnostic
+    lambda: "return {};"
+
+  - platform: template
+    id: filament_article_nr
+    name: "Filament Article Nr"
+    icon: mdi:barcode
+    entity_category: diagnostic
+    lambda: "return {};"
