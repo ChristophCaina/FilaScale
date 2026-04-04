@@ -1,8 +1,6 @@
-# 🏷️ FilaMan Hersteller-Tag (Manufacturer Tag)
-[← NFC Standards](./README.md)
+# FilaMan Hersteller-Tag (Manufacturer Tag)
 
-
-## 📋 Übersicht
+## Übersicht
 
 | Eigenschaft       | Wert                              |
 |-------------------|-----------------------------------|
@@ -13,13 +11,13 @@
 | **Smartphone**    | Android & iOS                     |
 | **Offen**         | Ja (MIT Lizenz)                   |
 
-## 🎯 Zweck
+## Zweck
 
 Der FilaMan Hersteller-Tag ist für **vorbestückte Spulen von Filamentherstellern** gedacht. Er enthält alle relevanten Produktdaten direkt auf dem Tag, sodass FilaMan (oder kompatible Systeme) automatisch Hersteller, Filament und Spule in Spoolman anlegen können — ohne manuelle Eingabe.
 
 **Erster kommerzieller Anwender:** [Recyclingfabrik](https://www.recyclingfabrik.com) — wird in Kürze Spulen mit diesem Tag-Format liefern.
 
-## 📄 Tag-Format
+## Tag-Format
 
 ```json
 {
@@ -34,7 +32,7 @@ Der FilaMan Hersteller-Tag ist für **vorbestückte Spulen von Filamentherstelle
 }
 ```
 
-## 📊 Felder
+## Felder
 
 | Feld  | Name              | Typ    | Pflicht | Beschreibung                              |
 |-------|-------------------|--------|---------|-------------------------------------------|
@@ -49,7 +47,7 @@ Der FilaMan Hersteller-Tag ist für **vorbestückte Spulen von Filamentherstelle
 
 > **Hinweis:** Es können weitere Felder vorhanden sein — unbekannte Felder sollten ignoriert werden.
 
-## 🔍 Erkennung
+## Erkennung
 
 Ein Tag wird als FilaMan Hersteller-Tag erkannt wenn:
 - Feld `b` (Brand) **und** `an` (Article Number) vorhanden sind
@@ -63,7 +61,7 @@ Hat JSON-Payload?
               └── → FilaMan Hersteller-Tag ✓
 ```
 
-## 🔗 Verknüpfung mit Spoolman
+## Verknüpfung mit Spoolman
 
 FilaMan nutzt die **Artikelnummer (`an`)** als Verknüpfungsschlüssel zu Spoolman. Dafür muss in Spoolman ein Extra-Feld `nfc_id` für Spulen konfiguriert sein.
 
@@ -80,30 +78,39 @@ Tag gelesen: an = "RF-PETG-OB-1000"
 
 ## ⚠️ Bekannte Limitierung: Mehrere gleiche Spulen
 
-**Problem:** Die Artikelnummer ist kein eindeutiger Identifier für eine einzelne Spule — sie identifiziert nur das Produkt.
+**Problem:** Die Artikelnummer identifiziert ein Produkt — nicht eine individuelle Spule.
 
 ```
 Spoolman enthält:
-  Spule #3: Recyclingfabrik PETG Ozeanblau — 200g remaining  ← an: RF-PETG-OB-1000
-  Spule #7: Recyclingfabrik PETG Ozeanblau — 980g remaining  ← an: RF-PETG-OB-1000
-  Spule #9: Recyclingfabrik PETG Ozeanblau — 1000g remaining ← an: RF-PETG-OB-1000
+  Spule #3: Recyclingfabrik PETG Ozeanblau — 200g  ← an: RF-PETG-OB-1000
+  Spule #7: Recyclingfabrik PETG Ozeanblau — 980g  ← an: RF-PETG-OB-1000
+  Spule #9: Recyclingfabrik PETG Ozeanblau — 1000g ← an: RF-PETG-OB-1000
 
 Tag gescannt → an: "RF-PETG-OB-1000"
   → Welche der drei Spulen ist gemeint? 🤷
 ```
 
-**FilaScale-Lösung:** Beim ersten Scan einer neuen Spule wird `sm_id` ergänzt:
+**FilaScale-Lösung:** Primäre Verknüpfung über die **Hardware-UID** des NFC-Chips:
 
 ```
-Erster Scan (kein sm_id):
-  1. Spoolman-Suche nach nfc_id = "RF-PETG-OB-1000"
-  2. Mehrere Treffer? → Display zeigt Auswahl nach Restgewicht
-  3. User wählt korrekte Spule
-  4. Tag wird neu beschrieben: {"b":"Recyclingfabrik",...,"sm_id":9}
-  5. Alle Folge-Scans: direkter Treffer via sm_id ✓
+Erster Scan (UID unbekannt):
+  1. Metadaten aus Tag lesen (b, t, cn, an...)
+  2. Spoolman-Suche nach nfc_uid = "74-10-37-94" → kein Treffer
+  3. Suche nach Artikelnummer: an = "RF-PETG-OB-1000" → 3 Treffer
+  4. Display zeigt Auswahl nach Restgewicht:
+       > Recyclingfabrik PETG 1000g #9
+         Recyclingfabrik PETG  980g #7
+         Recyclingfabrik PETG  200g #3
+  5. User wählt #9
+  6. Spoolman: PATCH /spool/9 → extra_field nfc_uid = "74-10-37-94"
+  7. Alle Folge-Scans: UID → direkt Spule #9 ✓ (kein Schreiben auf Tag nötig!)
 ```
 
-## 🗂️ NDEF Record Struktur
+> **Vorteil gegenüber sm_id:** Der Tag muss **nie beschrieben** werden.
+> Die UID ist unveränderlich und funktioniert mit jedem Tag-Format —
+> auch mit Read-only Tags oder Tags die aus anderen Systemen stammen.
+
+## NDEF Record Struktur
 
 ```
 NDEF Message
@@ -114,7 +121,7 @@ NDEF Message
         └── Payload: {"b":"Recyclingfabrik","t":"PETG",...}
 ```
 
-## 💻 Beispiel (ESPHome Lesen)
+## Beispiel (ESPHome Lesen)
 
 ```yaml
 on_tag:
@@ -134,7 +141,7 @@ on_tag:
         }
 ```
 
-## 🔌 Kompatibilität
+## Kompatibilität
 
 | System      | Unterstützung                        |
 |-------------|--------------------------------------|
