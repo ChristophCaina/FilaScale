@@ -75,7 +75,7 @@ http_request:
 update:
   - platform: http_request
     name: "Firmware Update"
-    source: ""
+    source: "https://christophcaina.github.io/filascale/firmware-builds/manifest-filascale.json"
 
 packages:
   base:     github://ChristophCaina/filascale/firmware/common/main.yaml@main
