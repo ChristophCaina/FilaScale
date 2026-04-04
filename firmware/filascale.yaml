@@ -82,4 +82,4 @@ packages:
   scale:    github://ChristophCaina/filascale/firmware/common/hx_711.yaml@main
   display:  github://ChristophCaina/filascale/firmware/common/display_st7920.yaml@main
   controls: github://ChristophCaina/filascale/firmware/common/controls.yaml@main
-  nfc:      github://ChristophCaina/filascale/firmware/common/nfc_pn532yaml@main
+  nfc:      github://ChristophCaina/filascale/firmware/common/nfc_pn532.yaml@main
