@@ -2,3 +2,26 @@
 #  Display Component for 16x2 Display via GPIO
 #  https://esphome.io/components/display/lcd_display/#lcd_gpio-component
 # ========================================================================
+globals:
+  - id: app_state
+    type: int
+    initial_value: '0' # 0: MAIN, 1: MENU_NO_TAG, etc.
+    restore_value: no
+  - id: menu_index
+    type: int
+    initial_value: '1'
+    restore_value: no
+
+font:
+  - file: "gfonts://Silkscreen"
+    id: small
+    size: 8
+  - file: "gfonts://Silkscreen"
+    id: medium
+    size: 10
+  - file: "gfonts://Silkscreen"
+    id: large
+    size: 15
+  - file: "gfonts://Silkscreen"
+    id: spool_id_large
+    size: 20

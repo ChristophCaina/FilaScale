@@ -35,13 +35,16 @@
 | Wert | Beschreibung |
 |------|-------------|
 | `FilaMan Spool Tag` | Enthält `sm_id` → direkte Spoolman-Verknüpfung |
-| `FilaMan Manufacturer Tag` | Enthält `b` + `an`, kein `sm_id` → Hersteller-Tag |
+| `FilaMan Manufacturer Tag` | Enthält `b` + `an` → Hersteller-Tag |
 | `FilaMan Manufacturer Tag (linked)` | Hersteller-Tag mit ergänzter `sm_id` |
 | `OpenSpool` | Enthält `protocol: openspool` |
 | `BambuLab RFID` | MIFARE Classic, proprietäres Format |
 | `Unknown` | NDEF vorhanden, Format nicht erkannt |
 | `Empty` | Tag erkannt, kein NDEF-Inhalt |
 | `` (leer) | Kein Tag auf dem Reader |
+
+> **Hinweis:** Die primäre Verknüpfung zu Spoolman erfolgt immer über die **Tag-UID** (`nfc_uid` Extra-Feld),
+> unabhängig vom Tag-Format. `sm_id` auf dem Tag ist optional.
 
 ## 🔘 Binary Sensoren
 

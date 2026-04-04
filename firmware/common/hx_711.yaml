@@ -1,1 +1,182 @@
 
+# ============================================================
+# scale.yaml
+# HX711 load cell: raw reading, calibration, tare, filters
+#
+# Calibration factor can be set two ways:
+#   Option 1 — via substitution in main.yaml (default/initial value)
+#   Option 2 — via "Calibration Factor" number entity in Home Assistant
+#              (stored on device, survives reboots)
+#
+# Calibration procedure:
+#   1. Empty platform → press "Tare Scale"
+#   2. Place known weight (e.g. 1000g)
+#   3. Read "Scale Raw" value from HA diagnostic sensor
+#   4. Calculate: factor = raw_value / known_weight_in_grams
+#   5. Enter factor in "Calibration Factor" number entity in HA
+# ============================================================
+
+esphome:
+  on_boot:
+    priority: -50
+    then:
+      # If substitution set → override HA entity (Power User)
+      # If substitution empty → keep HA entity value (Normal User)
+      - lambda: |-
+          std::string sub = "${scale_calibration_factor}";
+          if (!sub.empty()) {
+            float val = atof(sub.c_str());
+            if (val > 0) {
+              auto call = id(calibration_factor).make_call();
+              call.set_value(val);
+              call.perform();
+              ESP_LOGI("scale", "Calibration factor from substitution: %.1f", val);
+            }
+          }
+
+globals:
+  - id: scale_tare_offset
+    type: float
+    restore_value: true
+    initial_value: "0.0"
+
+  - id: spool_empty_weight
+    type: float
+    restore_value: true
+    initial_value: "200.0"
+
+  - id: spool_total_filament
+    type: float
+    restore_value: true
+    initial_value: "1000.0"
+
+number:
+  # -- Calibration factor --
+  # Initial value comes from substitution (main.yaml or example_config.yaml)
+  # Can be overridden at runtime via Home Assistant UI
+  - platform: template
+    id: calibration_factor
+    name: "Calibration Factor"
+    icon: mdi:tune
+    entity_category: config
+    min_value: 1
+    max_value: 100000
+    step: 0.1
+    restore_value: true
+    initial_value: 420.0
+    optimistic: true
+    on_value:
+      then:
+        - logger.log:
+            format: "Calibration factor updated: %.1f"
+            args: ["x"]
+
+  # -- Empty spool weight --
+  - platform: template
+    id: num_spool_empty_weight
+    name: "Empty Spool Weight"
+    icon: mdi:weight-gram
+    unit_of_measurement: "g"
+    entity_category: config
+    min_value: 0
+    max_value: 1000
+    step: 1
+    restore_value: true
+    initial_value: 200
+    optimistic: true
+    on_value:
+      then:
+        - globals.set:
+            id: spool_empty_weight
+            value: !lambda "return x;"
+
+  # -- Total filament weight --
+  - platform: template
+    id: num_spool_total_filament
+    name: "Total Filament Weight"
+    icon: mdi:weight-gram
+    unit_of_measurement: "g"
+    entity_category: config
+    min_value: 0
+    max_value: 5000
+    step: 1
+    restore_value: true
+    initial_value: 1000
+    optimistic: true
+    on_value:
+      then:
+        - globals.set:
+            id: spool_total_filament
+            value: !lambda "return x;"
+
+sensor:
+  # -- Raw HX711 value (visible for calibration) --
+  - platform: hx711
+    id: scale_raw
+    name: "Scale Raw"
+    internal: false
+    icon: mdi:numeric
+    entity_category: diagnostic
+    dout_pin: ${pin_scale_dt}
+    clk_pin: ${pin_scale_sck}
+    gain: 128
+    update_interval: 500ms
+    filters:
+      - sliding_window_moving_average:
+          window_size: 5
+          send_every: 1
+
+  # -- Calibrated weight in grams --
+  - platform: template
+    id: scale_weight
+    name: "Weight"
+    unit_of_measurement: "g"
+    accuracy_decimals: 1
+    icon: mdi:scale-balance
+    device_class: weight
+    state_class: measurement
+    update_interval: 500ms
+    lambda: |-
+      float raw = id(scale_raw).state;
+      float tare = id(scale_tare_offset);
+      float factor = id(calibration_factor).state;
+      if (factor <= 0) return 0.0f;
+      float weight = (raw - tare) / factor;
+      if (weight < 0.5f && weight > -5.0f) weight = 0.0f;
+      return weight;
+    filters:
+      - delta: 0.5
+
+  # -- Filament remaining in % --
+  - platform: template
+    id: filament_remaining_pct
+    name: "Filament Remaining"
+    unit_of_measurement: "%"
+    accuracy_decimals: 0
+    icon: mdi:percent
+    state_class: measurement
+    update_interval: 5s
+    lambda: |-
+      float net = id(scale_weight).state;
+      float spool = id(spool_empty_weight);
+      float total = id(spool_total_filament);
+      if (total <= 0) return NAN;
+      float remaining = ((net - spool) / total) * 100.0f;
+      return clamp(remaining, 0.0f, 100.0f);
+
+button:
+  # -- Tare / Zero the scale --
+  - platform: template
+    id: btn_tare
+    name: "Tare Scale"
+    icon: mdi:scale-balance
+    entity_category: config
+    on_press:
+      then:
+        - globals.set:
+            id: scale_tare_offset
+            value: !lambda "return id(scale_raw).state;"
+        - script.execute: beep_confirm
+        - logger.log:
+            format: "Scale tared. Offset: %.0f"
+            args: ["id(scale_tare_offset)"]
