@@ -51,6 +51,19 @@ for (const root of docRoots) {
       permalink = `${root.prefix}/${slug}/`;
     }
 
+    // Fix relative back-links: markdown files use ./README.md or ../README.md
+    // which don't resolve to Eleventy URLs in the browser.
+    if (basename === "readme") {
+      // From a section index (e.g. /de/docs/hardware/), ../README.md or
+      // ../../de/README.md should link to the docs root /de/docs/
+      content = content.replace(/\(\.\.\/README\.md\)/g, "(../)");
+      content = content.replace(/\(\.\.\/\.\.\/(?:de|en)\/README\.md\)/g, "(../)");
+    } else {
+      // From a sub-page (e.g. /de/docs/hardware/display_st7920_de/),
+      // ./README.md should link to the section index (../  = one level up)
+      content = content.replace(/\(\.\/README\.md\)/g, "(../)");
+    }
+
     // Derive title from first H1
     const h1 = content.match(/^#\s+(.+)$/m);
     const title = h1 ? h1[1].replace(/[^\w\s\(\)×\/\-–—]/gu, "").trim() : basename;
