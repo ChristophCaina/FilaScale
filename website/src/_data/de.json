@@ -1,7 +1,7 @@
 {
   "lang": "de",
   "langLabel": "Deutsch",
-  "langSwitch": "English",
+  "langSwitch": "EN",
   "langSwitchUrl": "/en/",
   "nav": {
     "home": "Startseite",
@@ -9,8 +9,7 @@
     "docs": "Dokumentation"
   },
   "hero": {
-    "title": "FilaScale",
-    "subtitle": "Präzise Filamentwaage auf ESP32-Basis — liest NFC-Tags, spricht Home Assistant und Spoolman.",
+    "subtitle": "Präzise Filamentwaage auf ESP32-Basis — liest NFC-Tags automatisch, meldet Gewicht und Spuleninfo an Home Assistant und Spoolman.",
     "ctaInstall": "Jetzt installieren",
     "ctaDocs": "Dokumentation"
   },
@@ -22,21 +21,49 @@
     "title": "Alles für deine Filamentverwaltung",
     "subtitle": "Von der Gewichtsmessung bis zur automatischen Spulen-Erkennung — FilaScale integriert sich nahtlos in dein Maker-Setup.",
     "weight": {
-      "title": "Gewichtsmessung",
-      "desc": "Präzise HX711-basierte Gewichtsmessung mit automatischem Tare"
+      "title": "Präzise Gewichtsmessung",
+      "desc": "HX711-basierte Wägezelle mit automatischem Tare. Kalibrierbar direkt über Home Assistant — kein Neuflashen erforderlich."
     },
     "nfc": {
-      "title": "NFC-Integration",
-      "desc": "Unterstützt FilaMan, OpenSpool, OpenPrintTag und BambuLab RFID"
+      "title": "NFC Tag-Erkennung",
+      "desc": "Liest Filament-Tags nach mehreren offenen Standards: FilaMan, OpenSpool, OpenPrintTag und BambuLab RFID. Spule auflegen — Daten erscheinen automatisch."
     },
     "ha": {
       "title": "Home Assistant",
-      "desc": "Native ESPHome-Integration mit automatischer Entity-Erkennung"
+      "desc": "Native ESPHome-Integration mit Auto-Discovery. Entities für Gewicht, Spuleninfo und NFC-Status sind sofort in deinem Dashboard verfügbar."
     },
     "display": {
       "title": "Display-Unterstützung",
-      "desc": "ST7920 128×64 und LCD1602 16×2 als Display-Varianten"
+      "desc": "Unterstützt ST7920 128×64 (Ender3/5-Display) und LCD1602 16×2. Gewicht, Restfilament und Materialtyp direkt an der Waage ablesen."
     }
+  },
+  "howto": {
+    "label": "So einfach geht's",
+    "title": "In drei Schritten einsatzbereit",
+    "steps": [
+      {
+        "num": "01",
+        "title": "Hardware aufbauen",
+        "desc": "ESP32 + HX711-Wägezelle + NFC-Reader (PN532 oder PN5180) + Display deiner Wahl. Alle Bauteile sind günstig und weit verbreitet."
+      },
+      {
+        "num": "02",
+        "title": "Firmware flashen",
+        "desc": "Direkt im Browser per Web Installer — kein USB-Treiber, kein Terminal. Passende Variante auswählen, klicken, fertig."
+      },
+      {
+        "num": "03",
+        "title": "Spule auflegen & loslegen",
+        "desc": "FilaScale verbindet sich mit deinem WLAN. Home Assistant erkennt das Gerät automatisch. Spule drauf — alle Daten erscheinen sofort."
+      }
+    ]
+  },
+  "opensource": {
+    "label": "Open Source",
+    "title": "Für die Community, von der Community",
+    "desc": "FilaScale ist vollständig quelloffen unter der MIT-Lizenz. ESPHome-Firmware, Hardware-Pläne und Dokumentation stehen jedem frei zur Verfügung — zum Nutzen, Anpassen und Verbessern.",
+    "btnGitHub": "Auf GitHub ansehen",
+    "btnDocs": "Dokumentation lesen"
   },
   "install": {
     "title": "Web-Installation",
@@ -55,10 +82,10 @@
     "step5": "Nach dem Neustart: WLAN in ESPHome konfigurieren",
     "variantLabel": "Firmware-Variante",
     "variants": {
-      "pn532": "PN532 NFC-Reader",
-      "pn5180": "PN5180 NFC-Reader",
-      "st7920": "ST7920 Display",
-      "lcd1602": "LCD1602 Display"
+      "pn532": "PN532 NFC-Reader + ST7920",
+      "pn5180": "PN5180 NFC-Reader + ST7920",
+      "st7920": "ST7920 Display (kein NFC)",
+      "lcd1602": "LCD1602 Display (kein NFC)"
     },
     "btnInstall": "Installieren",
     "browserWarning": "⚠️ Web Serial wird von diesem Browser nicht unterstützt. Bitte Chrome oder Edge verwenden.",
@@ -74,7 +101,9 @@
     }
   },
   "footer": {
+    "desc": "Quelloffene Filamentwaage für die 3D-Druck-Community. ESPHome · Home Assistant · MIT Lizenz.",
     "license": "MIT Lizenz",
-    "github": "GitHub"
+    "github": "GitHub",
+    "docs": "Dokumentation"
   }
 }

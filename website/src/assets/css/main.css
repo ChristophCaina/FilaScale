@@ -894,3 +894,105 @@ img { max-width: 100%; }
   .integrations-inner { flex-direction: column; align-items: flex-start; }
   .integrations-label { border-right: none; padding-right: 0; border-bottom: 1px solid var(--color-border); padding-bottom: .75rem; width: 100%; }
 }
+
+/* --- How it works --- */
+.howto { background: var(--color-surface); border-top: 1px solid var(--color-border); border-bottom: 1px solid var(--color-border); }
+
+.howto-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1.5rem;
+  position: relative;
+}
+
+.howto-step {
+  background: var(--color-surface-2);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  padding: 2rem 1.75rem;
+  position: relative;
+}
+
+.howto-num {
+  font-size: 2.5rem;
+  font-weight: 900;
+  letter-spacing: -.04em;
+  color: var(--color-primary);
+  opacity: .25;
+  line-height: 1;
+  margin-bottom: 1rem;
+}
+
+.howto-step h3 {
+  font-size: 1.1rem;
+  font-weight: 700;
+  margin-bottom: .6rem;
+}
+
+.howto-step p {
+  color: var(--color-text-muted);
+  font-size: .9rem;
+  line-height: 1.65;
+}
+
+/* --- Open Source section --- */
+.opensource { background: var(--color-bg); }
+
+.opensource-inner {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 4rem;
+  align-items: center;
+}
+
+.opensource-text .section-label { text-align: left; }
+
+.opensource-text h2 {
+  font-size: clamp(1.6rem, 3vw, 2.2rem);
+  letter-spacing: -.02em;
+  margin-bottom: 1rem;
+}
+
+.opensource-text p {
+  color: var(--color-text-muted);
+  max-width: 50ch;
+  line-height: 1.7;
+  margin-bottom: 1.75rem;
+}
+
+.opensource-actions { display: flex; gap: 1rem; flex-wrap: wrap; }
+
+.opensource-stats {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+}
+
+.stat-card {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  padding: 1.25rem 1.5rem;
+  text-align: center;
+  transition: border-color .2s;
+}
+.stat-card:hover { border-color: rgba(34,211,238,.25); }
+
+.stat-icon { font-size: 1.75rem; margin-bottom: .5rem; }
+
+.stat-label {
+  font-size: .8rem;
+  font-weight: 700;
+  color: var(--color-text-muted);
+  letter-spacing: .02em;
+}
+
+@media (max-width: 900px) {
+  .howto-grid { grid-template-columns: 1fr; }
+  .opensource-inner { grid-template-columns: 1fr; gap: 2.5rem; }
+  .opensource-stats { grid-template-columns: repeat(4, 1fr); }
+}
+
+@media (max-width: 600px) {
+  .opensource-stats { grid-template-columns: 1fr 1fr; }
+}
