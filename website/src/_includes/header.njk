@@ -1,23 +1,23 @@
 <header class="site-header">
   <div class="container">
-    <a href="/{{ i18n.lang }}/" class="site-logo" aria-label="FilaScale Home">
+    <a href="{{ ('/' + i18n.lang + '/') | url }}" class="site-logo" aria-label="FilaScale Home">
       ⚖ FilaScale
     </a>
 
     <nav class="site-nav" aria-label="Main navigation">
-      <a href="/{{ i18n.lang }}/"{% activeLink page, "/" + i18n.lang + "/" %}>
+      <a href="{{ ('/' + i18n.lang + '/') | url }}"{% activeLink page, "/" + i18n.lang + "/" %}>
         {{ i18n.nav.home }}
       </a>
-      <a href="/{{ i18n.lang }}/install/"{% activeLink page, "/" + i18n.lang + "/install/" %}>
+      <a href="{{ ('/' + i18n.lang + '/install/') | url }}"{% activeLink page, "/" + i18n.lang + "/install/" %}>
         {{ i18n.nav.install }}
       </a>
-      <a href="/{{ i18n.lang }}/docs/"{% activeLink page, "/" + i18n.lang + "/docs/" %}>
+      <a href="{{ ('/' + i18n.lang + '/docs/') | url }}"{% activeLink page, "/" + i18n.lang + "/docs/" %}>
         {{ i18n.nav.docs }}
       </a>
     </nav>
 
     <div class="header-actions">
-      <a href="{{ i18n.langSwitchUrl }}" class="lang-switch" title="Switch language">
+      <a href="{{ i18n.langSwitchUrl | url }}" class="lang-switch" title="Switch language">
         {{ i18n.langSwitch }}
       </a>
       <a href="https://github.com/ChristophCaina/FilaScale"

@@ -60,7 +60,7 @@ title: Install
         <div id="installer-container" class="installer-container">
           <esp-web-install-button
             id="esp-install-btn"
-            manifest="/assets/firmware/filascale-pn532.json">
+            manifest="{{ "/assets/firmware/filascale-pn532.json" | url }}">
             <button slot="activate" class="btn btn-primary btn-large btn-install">
               {{ i18n.install.btnInstall }}
             </button>
@@ -79,5 +79,5 @@ title: Install
 {% endblock %}
 
 {% block scripts %}
-<script src="/assets/js/installer.js"></script>
+<script src="{{ "/assets/js/installer.js" | url }}"></script>
 {% endblock %}

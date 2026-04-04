@@ -18,8 +18,8 @@ title: ""
       <h1>FilaScale</h1>
       <p class="hero-subtitle">{{ i18n.hero.subtitle }}</p>
       <div class="hero-actions">
-        <a href="/en/install/" class="btn btn-primary btn-large">{{ i18n.hero.ctaInstall }}</a>
-        <a href="/en/docs/" class="btn btn-secondary btn-large">{{ i18n.hero.ctaDocs }}</a>
+        <a href="{{ '/en/install/' | url }}" class="btn btn-primary btn-large">{{ i18n.hero.ctaInstall }}</a>
+        <a href="{{ '/en/docs/' | url }}" class="btn btn-secondary btn-large">{{ i18n.hero.ctaDocs }}</a>
       </div>
     </div>
     <div class="hero-visual" aria-hidden="true">
@@ -100,7 +100,7 @@ title: ""
   <div class="container">
     <h2>{{ i18n.install.title }}</h2>
     <p>{{ i18n.install.subtitle }}</p>
-    <a href="/en/install/" class="btn btn-primary btn-large">{{ i18n.hero.ctaInstall }}</a>
+    <a href="{{ '/en/install/' | url }}" class="btn btn-primary btn-large">{{ i18n.hero.ctaInstall }}</a>
   </div>
 </section>
 {% endblock %}
