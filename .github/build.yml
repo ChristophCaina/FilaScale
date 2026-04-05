@@ -1,5 +1,5 @@
 # ============================================================
-# build.yml
+# build.yaml
 # Runs on push to main — validates + compiles both targets
 # and deploys firmware binaries to GitHub Pages.
 #
@@ -16,12 +16,19 @@
 name: Build & Deploy
 
 on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: "Version override (leer = dev-<sha>)"
+        required: false
+        default: ""
+
   push:
     branches:
       - main
     paths:
       - "firmware/**"
-      - ".github/workflows/build.yml"
+      - ".github/workflows/build.yaml"
     tags:
       - "20[0-9][0-9].[0-9]+.[0-9]+"       # release:     2026.4.0
       - "20[0-9][0-9].[0-9]+.[0-9]+b[0-9]+" # pre-release: 2026.4.0b1
@@ -135,7 +142,9 @@ jobs:
       - name: Determine version
         id: version
         run: |
-          if [[ "${GITHUB_REF}" == refs/tags/* ]]; then
+          if [[ -n "${{ github.event.inputs.version }}" ]]; then
+            VERSION="${{ github.event.inputs.version }}"
+          elif [[ "${GITHUB_REF}" == refs/tags/* ]]; then
             VERSION="${GITHUB_REF#refs/tags/}"
           else
             VERSION="dev-${GITHUB_SHA::7}"
