@@ -1,23 +1,6 @@
-
 # ============================================================
 # nfc.yaml
 # NFC/RFID spool tag reading (PN532 via I2C)
-#
-# Supports:
-#   1. Fast-Path Tags (sm_id present)
-#      → directly set spoolman_spool_id → sync
-#
-#   2. FilaMan Manufacturer Tags (b + an present, no sm_id)
-#      → publish brand, material, color etc. to HA
-#      → TODO: create vendor/filament/spool in Spoolman API
-#      → TODO: write sm_id back to tag
-#
-#   3. Simple custom tags (spool_id=XX format)
-#      → set spoolman_spool_id → sync
-#
-#   4. Empty tags → ready to write
-#
-#   5. Unknown format → log content
 #
 # Hardware: PN532 via I2C
 #   SDA → ${pin_i2c_sda}
