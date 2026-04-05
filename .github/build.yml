@@ -1,0 +1,237 @@
+# ============================================================
+# build.yml
+# Runs on push to main — validates + compiles both targets
+# and deploys firmware binaries to GitHub Pages.
+#
+# Flow:
+#   1. validate    → esphome config (both targets)
+#   2. build       → esphome compile (both targets, parallel)
+#   3. deploy      → publish .bin + manifest to GitHub Pages
+#
+# Triggers:
+#   - Push → main (after PR merge)
+#   - Tag  → 20YY.M.N or 20YY.M.NbX (release / pre-release)
+# ============================================================
+
+name: Build & Deploy
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - "firmware/**"
+      - ".github/workflows/build.yml"
+    tags:
+      - "20[0-9][0-9].[0-9]+.[0-9]+"       # release:     2026.4.0
+      - "20[0-9][0-9].[0-9]+.[0-9]+b[0-9]+" # pre-release: 2026.4.0b1
+
+jobs:
+  # ── 1. Validate ──────────────────────────────────────────
+  validate:
+    name: Validate
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Cache pip
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/pip
+          key: esphome-pip-${{ hashFiles('**/requirements*.txt') }}
+          restore-keys: esphome-pip-
+
+      - name: Install ESPHome
+        run: pip install esphome --quiet
+
+      - name: Validate filascale.yaml
+        run: esphome config firmware/filascale.yaml
+
+      - name: Validate filascale_factory.yaml
+        run: esphome config firmware/filascale_factory.yaml
+
+  # ── 2. Build ─────────────────────────────────────────────
+  build:
+    name: Compile ${{ matrix.target }}
+    runs-on: ubuntu-latest
+    needs: validate
+    strategy:
+      matrix:
+        target:
+          - filascale          # main firmware (OTA updates)
+          - filascale_factory  # web installer (initial flash)
+      fail-fast: false
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Cache pip
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/pip
+          key: esphome-pip-${{ hashFiles('**/requirements*.txt') }}
+          restore-keys: esphome-pip-
+
+      - name: Cache ESPHome build
+        uses: actions/cache@v4
+        with:
+          path: firmware/.esphome
+          key: esphome-build-${{ matrix.target }}-${{ github.sha }}
+          restore-keys: |
+            esphome-build-${{ matrix.target }}-
+
+      - name: Install ESPHome
+        run: pip install esphome --quiet
+
+      - name: Compile ${{ matrix.target }}
+        run: |
+          esphome compile firmware/${{ matrix.target }}.yaml
+
+      - name: Copy firmware binary
+        run: |
+          mkdir -p firmware-builds
+          # ESP32 IDF produces merged binary at .esphome/build/*/firmware.bin
+          BINARY=$(find firmware/.esphome/build -name "*.bin" | head -1)
+          echo "Found binary: $BINARY"
+          cp "$BINARY" "firmware-builds/${{ matrix.target }}.bin"
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: firmware-${{ matrix.target }}
+          path: firmware-builds/${{ matrix.target }}.bin
+          retention-days: 30
+
+  # ── 3. Deploy to GitHub Pages ────────────────────────────
+  deploy:
+    name: Deploy to GitHub Pages
+    runs-on: ubuntu-latest
+    needs: build
+    permissions:
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Download filascale binary
+        uses: actions/download-artifact@v4
+        with:
+          name: firmware-filascale
+          path: pages/firmware-builds
+
+      - name: Download factory binary
+        uses: actions/download-artifact@v4
+        with:
+          name: firmware-filascale_factory
+          path: pages/firmware-builds
+
+      - name: Determine version
+        id: version
+        run: |
+          if [[ "${GITHUB_REF}" == refs/tags/* ]]; then
+            VERSION="${GITHUB_REF#refs/tags/}"
+          else
+            VERSION="dev-${GITHUB_SHA::7}"
+          fi
+          echo "version=${VERSION}" >> $GITHUB_OUTPUT
+          echo "Version: ${VERSION}"
+
+      - name: Determine pre-release
+        id: prerelease
+        run: |
+          VERSION="${{ steps.version.outputs.version }}"
+          if [[ "$VERSION" == *"b"* ]]; then
+            echo "is_prerelease=true" >> $GITHUB_OUTPUT
+          else
+            echo "is_prerelease=false" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Generate manifest (filascale)
+        run: |
+          VERSION="${{ steps.version.outputs.version }}"
+          PAGES_URL="https://christophcaina.github.io/FilaScale"
+          cat > pages/firmware-builds/manifest-filascale.json << EOF
+          {
+            "name": "FilaScale",
+            "version": "${VERSION}",
+            "home_assistant_domain": "esphome",
+            "new_install_prompt_erase": false,
+            "builds": [
+              {
+                "chipFamily": "ESP32",
+                "parts": [
+                  {
+                    "path": "${PAGES_URL}/firmware-builds/filascale_factory.bin",
+                    "offset": 0
+                  }
+                ]
+              }
+            ]
+          }
+          EOF
+
+      - name: Copy website
+        run: |
+          cp -r website/* pages/ 2>/dev/null || true
+
+      - name: List pages directory
+        run: ls -la pages/ pages/firmware-builds/
+
+      - name: Setup Pages
+        uses: actions/configure-pages@v4
+
+      - name: Upload Pages artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: pages
+
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
+
+  # ── 4. GitHub Release (only on tags) ─────────────────────
+  release:
+    name: Create GitHub Release
+    runs-on: ubuntu-latest
+    needs: deploy
+    if: startsWith(github.ref, 'refs/tags/')
+    permissions:
+      contents: write
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Download all firmware artifacts
+        uses: actions/download-artifact@v4
+        with:
+          path: release-assets
+
+      - name: Determine version and pre-release
+        id: meta
+        run: |
+          VERSION="${GITHUB_REF#refs/tags/}"
+          echo "version=${VERSION}" >> $GITHUB_OUTPUT
+          if [[ "$VERSION" == *"b"* ]]; then
+            echo "prerelease=true" >> $GITHUB_OUTPUT
+          else
+            echo "prerelease=false" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Create Release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ steps.meta.outputs.version }}
+          name: FilaScale ${{ steps.meta.outputs.version }}
+          prerelease: ${{ steps.meta.outputs.prerelease }}
+          generate_release_notes: true
+          files: |
+            release-assets/firmware-filascale/filascale.bin
+            release-assets/firmware-filascale_factory/filascale_factory.bin

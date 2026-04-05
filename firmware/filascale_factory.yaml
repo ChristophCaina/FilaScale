@@ -45,7 +45,7 @@ substitutions:
   pin_addon_detect:  GPIO05   # Winder add-on detection
 
 packages:
-  filament_scale: github://ChristophCaina/filamscale/firmware/filascale.yaml@main
+  filament_scale: github://ChristophCaina/FilaScale/firmware/filascale.yaml@main
 
 # WiFi: no credentials — configured via Improv or Captive Portal
 wifi:

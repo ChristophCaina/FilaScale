@@ -10,14 +10,14 @@ layout: layouts/base.njk
       <!-- Sidebar -->
       <aside class="doc-sidebar">
         <h3>{{ i18n.nav.docs }}</h3>
-        <a href="/{{ i18n.lang }}/docs/">← {{ i18n.nav.docs }}</a>
+        <a href="{{ ('/' + i18n.lang + '/docs/') | url }}">← {{ i18n.nav.docs }}</a>
       </aside>
 
       <!-- Content -->
       <article class="doc-content">
         <div class="doc-breadcrumb">
-          <a href="/{{ i18n.lang }}/">Home</a> /
-          <a href="/{{ i18n.lang }}/docs/">{{ i18n.nav.docs }}</a> /
+          <a href="{{ ('/' + i18n.lang + '/') | url }}">Home</a> /
+          <a href="{{ ('/' + i18n.lang + '/docs/') | url }}">{{ i18n.nav.docs }}</a> /
           {{ title }}
         </div>
         {{ content | safe }}

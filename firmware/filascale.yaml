@@ -10,7 +10,7 @@
 substitutions:
   name: "filascale"
   friendly_name: "FilaScale"
-  device_comment: "Filament Scale with ESPHome"
+  comment: "Filament Scale with ESPHome"
 
   # -- Backend IPs --
   backend_ip: ""

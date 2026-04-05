@@ -1,7 +1,7 @@
 {
   "lang": "en",
   "langLabel": "English",
-  "langSwitch": "Deutsch",
+  "langSwitch": "DE",
   "langSwitchUrl": "/de/",
   "nav": {
     "home": "Home",
@@ -9,33 +9,67 @@
     "docs": "Documentation"
   },
   "hero": {
-    "title": "FilaScale",
-    "subtitle": "ESPHome-based filament scale with NFC support",
+    "subtitle": "Precise ESP32-based filament scale — reads NFC tags automatically, reports weight and spool info to Home Assistant and Spoolman.",
     "ctaInstall": "Install now",
     "ctaDocs": "Documentation"
   },
+  "integrations": {
+    "label": "Works with"
+  },
   "features": {
-    "title": "Features",
+    "label": "What FilaScale does",
+    "title": "Everything for your filament management",
+    "subtitle": "From precise weight measurement to automatic spool detection — FilaScale integrates seamlessly into your maker setup.",
     "weight": {
-      "title": "Weight Measurement",
-      "desc": "Precise HX711-based weight measurement with automatic tare"
+      "title": "Precise Weight Measurement",
+      "desc": "HX711-based load cell with automatic tare. Calibrate directly from Home Assistant — no reflashing required."
     },
     "nfc": {
-      "title": "NFC Integration",
-      "desc": "Supports FilaMan, OpenSpool, OpenPrintTag and BambuLab RFID"
+      "title": "NFC Tag Detection",
+      "desc": "Reads filament tags across multiple open standards: FilaMan, OpenSpool, OpenPrintTag and BambuLab RFID. Place spool — data appears instantly."
     },
     "ha": {
       "title": "Home Assistant",
-      "desc": "Native ESPHome integration with automatic entity discovery"
+      "desc": "Native ESPHome integration with auto-discovery. Entities for weight, spool info and NFC status are immediately available in your dashboard."
     },
     "display": {
       "title": "Display Support",
-      "desc": "ST7920 128×64 and LCD1602 16×2 as display variants"
+      "desc": "Supports ST7920 128×64 (Ender3/5 display) and LCD1602 16×2. Read weight, remaining filament and material type right at the scale."
     }
+  },
+  "howto": {
+    "label": "How it works",
+    "title": "Up and running in three steps",
+    "steps": [
+      {
+        "num": "01",
+        "title": "Build the hardware",
+        "desc": "ESP32 + HX711 load cell + NFC reader (PN532 or PN5180) + display of your choice. All components are inexpensive and widely available."
+      },
+      {
+        "num": "02",
+        "title": "Flash the firmware",
+        "desc": "Directly in your browser via the Web Installer — no USB driver, no terminal. Select your variant, click, done."
+      },
+      {
+        "num": "03",
+        "title": "Place spool & go",
+        "desc": "FilaScale connects to your Wi-Fi. Home Assistant discovers the device automatically. Put a spool on — all data appears instantly."
+      }
+    ]
+  },
+  "opensource": {
+    "label": "Open Source",
+    "title": "By the community, for the community",
+    "desc": "FilaScale is fully open source under the MIT license. ESPHome firmware, hardware schematics and documentation are freely available for everyone — to use, adapt and improve.",
+    "btnGitHub": "View on GitHub",
+    "btnDocs": "Read the docs"
   },
   "install": {
     "title": "Web Installer",
     "subtitle": "Install FilaScale directly in your browser — no USB driver, no terminal.",
+    "currentVersion": "Current Version",
+    "releaseNotes": "Release Notes",
     "requirements": "Requirements",
     "reqList": [
       "Google Chrome or Microsoft Edge (Web Serial API required)",
@@ -44,17 +78,9 @@
     ],
     "steps": "Installation Steps",
     "step1": "Connect ESP32 to your computer via USB",
-    "step2": "Select firmware variant",
-    "step3": "Click \"Install\" and select the COM port",
-    "step4": "Wait for the installation to complete",
-    "step5": "After reboot: configure Wi-Fi in ESPHome",
-    "variantLabel": "Firmware Variant",
-    "variants": {
-      "pn532": "PN532 NFC Reader",
-      "pn5180": "PN5180 NFC Reader",
-      "st7920": "ST7920 Display",
-      "lcd1602": "LCD1602 Display"
-    },
+    "step2": "Click \"Install\" and select the COM port",
+    "step3": "Wait for the installation to complete",
+    "step4": "After reboot: configure Wi-Fi via the \"filascale\" hotspot",
     "btnInstall": "Install",
     "browserWarning": "⚠️ Web Serial is not supported by this browser. Please use Chrome or Edge.",
     "notSupported": "Your browser does not support the Web Serial API."
@@ -69,7 +95,9 @@
     }
   },
   "footer": {
+    "desc": "Open source filament scale for the 3D printing community. ESPHome · Home Assistant · MIT License.",
     "license": "MIT License",
-    "github": "GitHub"
+    "github": "GitHub",
+    "docs": "Documentation"
   }
 }

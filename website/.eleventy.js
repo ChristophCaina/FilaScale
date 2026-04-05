@@ -18,8 +18,13 @@ module.exports = function (eleventyConfig) {
   eleventyConfig.addPassthroughCopy({ "src/assets/img": "assets/img" });
 
   // Shortcode: active nav link
+  // Use exact match for root language pages (/de/, /en/) to avoid matching all sub-pages.
+  // Use startsWith for section pages (/de/docs/, etc.) so sub-pages keep the nav item active.
   eleventyConfig.addShortcode("activeLink", function (page, href) {
-    return page.url.startsWith(href) ? ' aria-current="page"' : "";
+    const segments = href.split("/").filter(Boolean);
+    const isRoot = segments.length === 1;
+    const match = isRoot ? page.url === href : page.url.startsWith(href);
+    return match ? ' aria-current="page"' : "";
   });
 
   // Filter: get translation string
