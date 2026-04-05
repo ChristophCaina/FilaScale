@@ -68,6 +68,8 @@
   "install": {
     "title": "Web-Installation",
     "subtitle": "Installiere FilaScale direkt im Browser — kein USB-Treiber, kein Terminal.",
+    "currentVersion": "Aktuelle Version",
+    "releaseNotes": "Release Notes",
     "requirements": "Voraussetzungen",
     "reqList": [
       "Google Chrome oder Microsoft Edge (Web Serial API erforderlich)",
@@ -76,17 +78,9 @@
     ],
     "steps": "Installationsschritte",
     "step1": "ESP32 per USB mit dem Computer verbinden",
-    "step2": "Firmware-Variante auswählen",
-    "step3": "\"Installieren\" klicken und COM-Port auswählen",
-    "step4": "Warten bis die Installation abgeschlossen ist",
-    "step5": "Nach dem Neustart: WLAN in ESPHome konfigurieren",
-    "variantLabel": "Firmware-Variante",
-    "variants": {
-      "pn532": "PN532 NFC-Reader + ST7920",
-      "pn5180": "PN5180 NFC-Reader + ST7920",
-      "st7920": "ST7920 Display (kein NFC)",
-      "lcd1602": "LCD1602 Display (kein NFC)"
-    },
+    "step2": "\"Installieren\" klicken und COM-Port auswählen",
+    "step3": "Warten bis die Installation abgeschlossen ist",
+    "step4": "Nach dem Neustart: WLAN über den Hotspot \"filascale\" konfigurieren",
     "btnInstall": "Installieren",
     "browserWarning": "⚠️ Web Serial wird von diesem Browser nicht unterstützt. Bitte Chrome oder Edge verwenden.",
     "notSupported": "Dein Browser unterstützt keine Web Serial API."

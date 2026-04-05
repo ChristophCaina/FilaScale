@@ -524,6 +524,32 @@ img { max-width: 100%; }
 .page-subtitle { color: var(--color-text-muted); font-size: 1.1rem; }
 
 /* --- Install page --- */
+.version-banner {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  background: var(--color-primary-glow);
+  border: 1px solid var(--color-primary);
+  border-radius: var(--radius-md);
+  padding: .75rem 1.25rem;
+  margin-bottom: 2rem;
+  font-size: .9rem;
+}
+.version-label { color: var(--color-text-muted); }
+.version-number {
+  font-weight: 700;
+  font-family: var(--font-mono);
+  color: var(--color-primary);
+  font-size: 1rem;
+}
+.version-link {
+  margin-left: auto;
+  color: var(--color-text-muted);
+  text-decoration: none;
+  font-size: .85rem;
+}
+.version-link:hover { color: var(--color-primary); }
+
 .install-block {
   background: var(--color-surface);
   border: 1px solid var(--color-border);
