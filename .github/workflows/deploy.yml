@@ -1,0 +1,95 @@
+# ============================================================
+# deploy.yml
+# Deploys Web Installer to GitHub Pages.
+# Triggered after successful ESPHome Build & Release,
+# or manually.
+#
+# Fetches firmware binaries from the latest GitHub Release.
+# ============================================================
+
+name: Deploy Web Installer
+
+on:
+  workflow_run:
+    workflows: ["ESPHome Build & Release"]
+    types:
+      - completed
+
+  push:
+    branches:
+      - main
+    paths:
+      - "website/**"
+      - ".github/workflows/deploy.yml"
+
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    name: Deploy to GitHub Pages
+    runs-on: ubuntu-latest
+    if: >
+      github.event_name == 'push' ||
+      github.event_name == 'workflow_dispatch' ||
+      (github.event_name == 'workflow_run' &&
+       github.event.workflow_run.conclusion == 'success')
+
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Install jq
+        run: sudo apt-get update && sudo apt-get install -y jq
+
+      - name: Download firmware from latest release
+        run: |
+          RELEASE=$(curl -s \
+            -H "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" \
+            "https://api.github.com/repos/${{ github.repository }}/releases/latest")
+
+          TAG=$(echo "$RELEASE" | jq -r '.tag_name')
+          echo "Latest release: $TAG"
+
+          mkdir -p website/firmware-builds
+
+          if [ "$TAG" = "null" ] || [ -z "$TAG" ]; then
+            echo "⚠️ No release found — deploying installer without firmware."
+          else
+            for ASSET in filascale_factory.bin filascale.ota.bin manifest-filascale.json; do
+              URL=$(echo "$RELEASE" | jq -r \
+                --arg name "$ASSET" \
+                '.assets[] | select(.name == $name) | .browser_download_url')
+              if [ -n "$URL" ] && [ "$URL" != "null" ]; then
+                echo "Downloading: $ASSET"
+                curl -L -o "website/firmware-builds/$ASSET" "$URL"
+              else
+                echo "⚠️ Asset not found: $ASSET"
+              fi
+            done
+            echo "✅ Downloaded assets for release $TAG"
+          fi
+
+      - name: Setup Pages
+        uses: actions/configure-pages@v5
+
+      - name: Upload Pages artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: website/
+
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4

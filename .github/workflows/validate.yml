@@ -1,0 +1,50 @@
+# ============================================================
+# validate.yml
+# Validates ESPHome YAML on every PR → main or dev.
+# Uses ci-validate.yaml which wraps filascale.yaml + adds wifi.
+# No firmware is compiled here (fast feedback).
+# ============================================================
+
+name: ESPHome Validate
+
+on:
+  pull_request:
+    branches:
+      - main
+      - dev
+  push:
+    branches:
+      - dev
+    paths:
+      - "firmware/**"
+      - ".github/workflows/validate.yml"
+
+jobs:
+  validate:
+    name: Validate ESPHome Config
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Cache pip
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/pip
+          key: esphome-pip-${{ hashFiles('**/requirements*.txt') }}
+          restore-keys: esphome-pip-
+
+      - name: Install ESPHome
+        run: pip install esphome
+
+      - name: Validate (ci-validate → filascale + wifi)
+        run: esphome config firmware/ci-validate.yaml
+
+      - name: Validate factory
+        run: esphome config firmware/filascale_factory.yaml
