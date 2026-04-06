@@ -48,10 +48,7 @@ esp32:
   board: esp32dev
   framework:
     type: esp-idf
-
-packages:
-  filascale: !include filascale.yaml
-
+    
 wifi:
   ssid: "ci-validate"
   password: "ci-validate"
