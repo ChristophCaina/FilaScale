@@ -20,7 +20,7 @@ substitutions:
   device_comment: "Filament Scale with ESPHome"
 
   # -- Backend IPs --
-  backend_ip: ""
+  backend_url: ""
 
   # -- Scale calibration --
   scale_calibration_factor: ""
