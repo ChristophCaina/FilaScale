@@ -1,7 +1,8 @@
 # ============================================================
-# build.yaml
+# build.yml
 # Builds firmware and creates GitHub Release on tags.
-# Deploy to GitHub Pages is handled by deploy.yml.
+# After a successful release, pages.yml automatically
+# rebuilds and redeploys the website.
 #
 # Triggers:
 #   - Tag: 2026.4.0        → stable release
@@ -15,7 +16,7 @@ on:
   workflow_dispatch:
     inputs:
       version:
-        description: "Version tag (z.B. 2026.4.0b1)"
+        description: "Version tag (e.g. 2026.4.0b1)"
         required: false
         default: ""
 
@@ -90,25 +91,19 @@ jobs:
           release-url: https://github.com/${{ github.repository }}/releases/tag/${{ steps.version.outputs.version }}
           release-summary: "FilaScale ${{ steps.version.outputs.version }}"
 
-      - name: Show build outputs
-        run: |
-          echo "Name: ${{ steps.esphome-build.outputs.name }}"
-          echo "Version: ${{ steps.esphome-build.outputs.version }}"
-          ls -la "${{ steps.esphome-build.outputs.name }}/"
-
       - name: Prepare release assets
         run: |
           BUILD_DIR="${{ steps.esphome-build.outputs.name }}"
 
           cp "${BUILD_DIR}/"*.factory.bin ./filascale_factory.bin
-          cp "${BUILD_DIR}/"*.ota.bin     ./filascale.ota.bin
+          cp "${BUILD_DIR}/"*.ota.bin     ./filascale_ota.bin
 
           jq '.builds[0].parts[0].path = "filascale_factory.bin" |
-              .builds[0].ota.path = "filascale.ota.bin"' \
+              .builds[0].ota.path = "filascale_ota.bin"' \
             "${BUILD_DIR}/manifest.json" > ./manifest-filascale.json
 
           echo "Assets prepared:"
-          ls -la ./filascale_factory.bin ./filascale.ota.bin ./manifest-filascale.json
+          ls -la ./filascale_factory.bin ./filascale_ota.bin ./manifest-filascale.json
           cat ./manifest-filascale.json
 
       - name: Create GitHub Release
@@ -120,7 +115,7 @@ jobs:
           generate_release_notes: true
           files: |
             ./filascale_factory.bin
-            ./filascale.ota.bin
+            ./filascale_ota.bin
             ./manifest-filascale.json
           body: |
             **Web Installer:** https://christophcaina.github.io/FilaScale/
