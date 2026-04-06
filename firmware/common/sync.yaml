@@ -24,7 +24,7 @@ text:
     entity_category: config
     optimistic: true
     restore_value: true
-    initial_value: "http://0.0.0.0:7912"
+    initial_value: "http://homeassistant.local:7912"
     mode: text
     on_value:
       then:
@@ -93,7 +93,8 @@ script:
           if (weight < 0) weight = 0;
           ESP_LOGI("sync", "Syncing weight %.1fg to spool #%d",
                    weight, id(active_spool_id));
-      - http_request.patch:
+      - http_request.send:
+          method: PATCH
           url: !lambda |-
             return id(backend_url).state + "/api/v1/spool/" +
                    std::to_string(id(active_spool_id));
@@ -129,7 +130,8 @@ script:
           ESP_LOGI("sync", "Assigning UID %s to spool #%d",
                    id(nfc_last_uid).c_str(),
                    id(active_spool_id));
-      - http_request.patch:
+      - http_request.send:
+          method: PATCH
           url: !lambda |-
             return id(backend_url).state + "/api/v1/spool/" +
                    std::to_string(id(active_spool_id));
