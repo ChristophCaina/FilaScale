@@ -64,7 +64,7 @@ script:
       - http_request.get:
           url: !lambda |-
             return id(backend_url).state + "/api/v1/health";
-          headers:
+          request_headers:
             Content-Type: application/json
           on_response:
             then:
@@ -97,7 +97,7 @@ script:
           url: !lambda |-
             return id(backend_url).state + "/api/v1/spool/" +
                    std::to_string(id(active_spool_id));
-          headers:
+          request_headers:
             Content-Type: application/json
           body: !lambda |-
             char buf[64];
@@ -133,7 +133,7 @@ script:
           url: !lambda |-
             return id(backend_url).state + "/api/v1/spool/" +
                    std::to_string(id(active_spool_id));
-          headers:
+          request_headers:
             Content-Type: application/json
           body: !lambda |-
             // JSON-escape UID (UIDs are hex+dash, no escaping needed)
