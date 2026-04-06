@@ -305,7 +305,8 @@ script:
                     ESP_LOGW("nfc", "Spoolman lookup failed: %d", response->status_code);
                     return;
                   }
-                  std::string body = response->data;
+                  // ESPHome: response body via response->get_string()
+                  std::string body = response->get_string();
                   ESP_LOGD("nfc", "Lookup response: %s", body.c_str());
 
                   // Einfacher JSON-Parser: prüfe ob items leer
