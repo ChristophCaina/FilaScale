@@ -76,6 +76,27 @@ captive_portal:
 
 logger:
 
+web_server:
+  port: 80
+  version: 3
+  log: false
+  sorting_groups:
+    - id: group_scale
+      name: "Scale"
+      sorting_weight: 10
+    - id: group_filament
+      name: "Filament"
+      sorting_weight: 20
+    - id: group_nfc
+      name: "NFC"
+      sorting_weight: 30
+    - id: group_config
+      name: "Configuration"
+      sorting_weight: 40
+    - id: group_diagnostic
+      name: "Diagnose"
+      sorting_weight: 99
+
 packages:
   base:     github://ChristophCaina/filascale/firmware/common/main.yaml@main
   scale:    github://ChristophCaina/filascale/firmware/common/hx_711.yaml@main
