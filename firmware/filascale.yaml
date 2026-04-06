@@ -83,3 +83,4 @@ packages:
   display:  github://ChristophCaina/filascale/firmware/common/display_st7920.yaml@main
   controls: github://ChristophCaina/filascale/firmware/common/controls.yaml@main
   nfc:      github://ChristophCaina/filascale/firmware/common/nfc_pn532.yaml@main
+  sync:     github://ChristophCaina/filascale/firmware/common/sync.yaml@main
