@@ -37,7 +37,11 @@ Der FilaMan Spool Tag ist ein einfacher **Zeiger auf eine Spoolman-Spule**. Er e
 - **Minimaler Speicherbedarf**: Der Tag enthält nur das Nötigste — ideal für NTAG213 (144 Bytes nutzbar)
 - **Server-abhängig**: Ohne erreichbares Spoolman/FilaMan-Backend keine Offline-Nutzung möglich
 - **Nicht selbstbeschreibend**: Ein fremdes Gerät ohne Spoolman-Zugang kann den Tag nicht interpretieren
-- **Eindeutig**: Da `sm_id` eine Datenbankid ist, ist jede Spule eindeutig identifizierbar
+- **Eindeutig via sm_id**: Da `sm_id` eine Datenbankid ist, ist jede Spule eindeutig identifizierbar
+
+> **FilaScale Hinweis:** `sm_id` auf dem Tag ist **optional**. FilaScale nutzt primär die **Hardware-UID**
+> des NFC-Chips (`nfc_uid` Extra-Feld in Spoolman) zur Verknüpfung. Tags müssen daher nicht
+> beschrieben werden — die UID ist unveränderlich und immer lesbar.
 
 ## NDEF Record Struktur
 

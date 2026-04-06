@@ -78,28 +78,37 @@ Tag gelesen: an = "RF-PETG-OB-1000"
 
 ## ⚠️ Bekannte Limitierung: Mehrere gleiche Spulen
 
-**Problem:** Die Artikelnummer ist kein eindeutiger Identifier für eine einzelne Spule — sie identifiziert nur das Produkt.
+**Problem:** Die Artikelnummer identifiziert ein Produkt — nicht eine individuelle Spule.
 
 ```
 Spoolman enthält:
-  Spule #3: Recyclingfabrik PETG Ozeanblau — 200g remaining  ← an: RF-PETG-OB-1000
-  Spule #7: Recyclingfabrik PETG Ozeanblau — 980g remaining  ← an: RF-PETG-OB-1000
-  Spule #9: Recyclingfabrik PETG Ozeanblau — 1000g remaining ← an: RF-PETG-OB-1000
+  Spule #3: Recyclingfabrik PETG Ozeanblau — 200g  ← an: RF-PETG-OB-1000
+  Spule #7: Recyclingfabrik PETG Ozeanblau — 980g  ← an: RF-PETG-OB-1000
+  Spule #9: Recyclingfabrik PETG Ozeanblau — 1000g ← an: RF-PETG-OB-1000
 
 Tag gescannt → an: "RF-PETG-OB-1000"
   → Welche der drei Spulen ist gemeint? 🤷
 ```
 
-**FilaScale-Lösung:** Beim ersten Scan einer neuen Spule wird `sm_id` ergänzt:
+**FilaScale-Lösung:** Primäre Verknüpfung über die **Hardware-UID** des NFC-Chips:
 
 ```
-Erster Scan (kein sm_id):
-  1. Spoolman-Suche nach nfc_id = "RF-PETG-OB-1000"
-  2. Mehrere Treffer? → Display zeigt Auswahl nach Restgewicht
-  3. User wählt korrekte Spule
-  4. Tag wird neu beschrieben: {"b":"Recyclingfabrik",...,"sm_id":9}
-  5. Alle Folge-Scans: direkter Treffer via sm_id ✓
+Erster Scan (UID unbekannt):
+  1. Metadaten aus Tag lesen (b, t, cn, an...)
+  2. Spoolman-Suche nach nfc_uid = "74-10-37-94" → kein Treffer
+  3. Suche nach Artikelnummer: an = "RF-PETG-OB-1000" → 3 Treffer
+  4. Display zeigt Auswahl nach Restgewicht:
+       > Recyclingfabrik PETG 1000g #9
+         Recyclingfabrik PETG  980g #7
+         Recyclingfabrik PETG  200g #3
+  5. User wählt #9
+  6. Spoolman: PATCH /spool/9 → extra_field nfc_uid = "74-10-37-94"
+  7. Alle Folge-Scans: UID → direkt Spule #9 ✓ (kein Schreiben auf Tag nötig!)
 ```
+
+> **Vorteil gegenüber sm_id:** Der Tag muss **nie beschrieben** werden.
+> Die UID ist unveränderlich und funktioniert mit jedem Tag-Format —
+> auch mit Read-only Tags oder Tags die aus anderen Systemen stammen.
 
 ## NDEF Record Struktur
 

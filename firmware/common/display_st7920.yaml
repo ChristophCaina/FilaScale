@@ -1,0 +1,48 @@
+# ========================================================================
+#  Display Component for Standard Display via ST 7920 (Ender3/Ender 5)
+#  https://esphome.io/components/display/st7920/
+# ========================================================================
+
+globals:
+  - id: app_state
+    type: int
+    initial_value: '0' # 0: MAIN, 1: MENU_NO_TAG, etc.
+    restore_value: no
+  - id: menu_index
+    type: int
+    initial_value: '1'
+    restore_value: no
+  - id: menu_page
+    type: int
+    restore_value: false
+    initial_value: "0"
+
+font:
+  - file: "gfonts://Silkscreen"
+    id: small
+    size: 8
+  - file: "gfonts://Silkscreen"
+    id: medium
+    size: 10
+  - file: "gfonts://Silkscreen"
+    id: large
+    size: 15
+  - file: "gfonts://Silkscreen"
+    id: spool_id_large
+    size: 20
+
+spi:
+  clk_pin: ${pin_display_clk}
+  mosi_pin: ${pin_display_mosi}
+
+display:
+  - platform: st7920
+    id: my_display
+    show_test_card: true
+    auto_clear_enabled: true
+    cs_pin:
+      number: ${pin_display_cs}
+      inverted: true
+    width: 128
+    height: 64
+    update_interval: 1s

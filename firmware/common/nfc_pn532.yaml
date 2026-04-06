@@ -1,0 +1,349 @@
+# ============================================================
+# nfc_pn532.yaml
+# PN532 NFC reader: tag detection, UID lookup, format detection
+#
+# Identification strategy:
+#   Primary key: Hardware UID of NFC chip (stored in Spoolman
+#   extra field "nfc_uid"). No tag writing required.
+#
+# Supported formats (read):
+#   - FilaMan Spool Tag    {"sm_id": 5}
+#   - FilaMan Manufacturer Tag  {"b":"...", "an":"..."}
+#   - OpenSpool           {"protocol":"openspool",...}
+#   - BambuLab RFID       (MIFARE Classic, read only)
+#   - Empty / Unknown
+#
+# Flow:
+#   1. Tag placed → read UID
+#   2. GET /api/v1/spool?extra_field[nfc_uid]={uid}
+#   3a. Found → sync weight, show filament info
+#   3b. Not found → parse NDEF, filter spool list → user selects
+#   4. PATCH /api/v1/spool/{id} → nfc_uid = uid
+# ============================================================
+
+i2c:
+  sda: ${pin_i2c_sda}
+  scl: ${pin_i2c_scl}
+  scan: false
+
+globals:
+  # Last seen UID — used for Spoolman lookup
+  - id: nfc_last_uid
+    type: std::string
+    restore_value: false
+    initial_value: '""'
+
+  # Current active Spoolman spool ID (0 = none)
+  - id: active_spool_id
+    type: int
+    restore_value: false
+    initial_value: "0"
+
+  # Presence timer — prevents false triggers while spool spins past reader
+  - id: nfc_presence_ticks
+    type: int
+    restore_value: false
+    initial_value: "0"
+
+  # Filament data from tag (cleared on tag removal)
+  - id: tag_brand
+    type: std::string
+    restore_value: false
+    initial_value: '""'
+
+  - id: tag_material
+    type: std::string
+    restore_value: false
+    initial_value: '""'
+
+  - id: tag_color
+    type: std::string
+    restore_value: false
+    initial_value: '""'
+
+  - id: tag_color_hex
+    type: std::string
+    restore_value: false
+    initial_value: '""'
+
+  - id: tag_article_nr
+    type: std::string
+    restore_value: false
+    initial_value: '""'
+
+pn532_i2c:
+  id: nfc_reader
+  address: 0x24
+  update_interval: 1s
+
+  on_tag:
+    then:
+      - lambda: |-
+          // ── 1. UID lesen ──────────────────────────────────
+          std::string uid = x;
+          ESP_LOGI("nfc", "Tag detected: UID=%s", uid.c_str());
+
+          // ── 2. Presence timer (3 ticks = ~3s) ────────────
+          id(nfc_presence_ticks) += 1;
+          if (id(nfc_presence_ticks) < 3) {
+            ESP_LOGD("nfc", "Presence tick %d/3", id(nfc_presence_ticks));
+            return;
+          }
+
+          // Already known? Skip lookup
+          if (uid == id(nfc_last_uid) && id(active_spool_id) > 0) {
+            ESP_LOGD("nfc", "Known tag, skipping lookup");
+            return;
+          }
+
+          id(nfc_last_uid) = uid;
+          id(nfc_tag_uid).publish_state(uid);
+          id(nfc_tag_present_sensor).publish_state(true);
+
+          // ── 3. NDEF-Inhalt parsen ─────────────────────────
+          std::string payload = "";
+          std::string tag_type = "Empty";
+
+          if (tag.has_ndef_message()) {
+            auto msg = tag.get_ndef_message();
+            auto records = msg->get_records();
+            for (auto &rec : records) {
+              payload = rec->get_payload();
+              break;
+            }
+
+            if (!payload.empty()) {
+              // Format erkennen
+              if (payload.find("\"sm_id\"") != std::string::npos) {
+                tag_type = "FilaMan Spool Tag";
+              } else if (payload.find("\"protocol\":\"openspool\"") != std::string::npos ||
+                         payload.find("\"protocol\": \"openspool\"") != std::string::npos) {
+                tag_type = "OpenSpool";
+              } else if (payload.find("\"b\"") != std::string::npos &&
+                         payload.find("\"an\"") != std::string::npos) {
+                tag_type = "FilaMan Manufacturer Tag";
+              } else {
+                tag_type = "Unknown";
+              }
+
+              // Metadaten extrahieren (für alle Formate)
+              auto extract = [&](const std::string& key) -> std::string {
+                auto pos = payload.find("\"" + key + "\":\"");
+                if (pos == std::string::npos) return "";
+                auto start = pos + key.size() + 4;
+                auto end = payload.find("\"", start);
+                if (end == std::string::npos) return "";
+                return payload.substr(start, end - start);
+              };
+
+              // Brand (b / brand)
+              std::string brand = extract("b");
+              if (brand.empty()) brand = extract("brand");
+              id(tag_brand) = brand;
+
+              // Material (t / type)
+              std::string mat = extract("t");
+              if (mat.empty()) mat = extract("type");
+              id(tag_material) = mat;
+
+              // Color name (cn / color_name)
+              std::string col = extract("cn");
+              if (col.empty()) col = extract("color_name");
+              id(tag_color) = col;
+
+              // Color hex (c / color_hex)
+              std::string hex = extract("c");
+              if (hex.empty()) hex = extract("color_hex");
+              id(tag_color_hex) = hex;
+
+              // Article number
+              id(tag_article_nr) = extract("an");
+            }
+          }
+
+          id(nfc_tag_type).publish_state(tag_type);
+          id(filament_brand).publish_state(id(tag_brand));
+          id(filament_material).publish_state(id(tag_material));
+          id(filament_color).publish_state(id(tag_color));
+          id(filament_color_hex).publish_state(id(tag_color_hex));
+          id(filament_article_nr).publish_state(id(tag_article_nr));
+
+          ESP_LOGI("nfc", "Format: %s | Brand: %s | Material: %s",
+                   tag_type.c_str(),
+                   id(tag_brand).c_str(),
+                   id(tag_material).c_str());
+
+      # ── 4. Spoolman UID-Lookup ────────────────────────────
+      - script.execute: nfc_spoolman_lookup
+
+  on_tag_removed:
+    then:
+      - lambda: |-
+          ESP_LOGI("nfc", "Tag removed: %s", x.c_str());
+          id(nfc_presence_ticks) = 0;
+
+          // Nur zurücksetzen wenn es wirklich der aktive Tag war
+          if (x == id(nfc_last_uid)) {
+            id(nfc_last_uid) = "";
+            id(active_spool_id) = 0;
+            id(nfc_tag_present_sensor).publish_state(false);
+            id(nfc_tag_type).publish_state("");
+            id(nfc_tag_uid).publish_state("");
+            id(filament_brand).publish_state("");
+            id(filament_material).publish_state("");
+            id(filament_color).publish_state("");
+            id(filament_color_hex).publish_state("");
+            id(filament_article_nr).publish_state("");
+            id(active_spool_id_sensor).publish_state(0);
+          }
+
+# ── Entities ────────────────────────────────────────────────
+
+binary_sensor:
+  - platform: template
+    id: nfc_tag_present_sensor
+    name: "Tag Present"
+    device_class: presence
+    web_server:
+      sorting_group_id: group_nfc
+      sorting_weight: 1
+
+text_sensor:
+  - platform: template
+    id: nfc_tag_type
+    name: "Tag Type"
+    icon: mdi:nfc-variant
+    web_server:
+      sorting_group_id: group_nfc
+      sorting_weight: 2
+
+  - platform: template
+    id: nfc_tag_uid
+    name: "Tag UID"
+    icon: mdi:identifier
+    entity_category: diagnostic
+    web_server:
+      sorting_group_id: group_diagnostic
+      sorting_weight: 10
+
+  - platform: template
+    id: filament_brand
+    name: "Brand"
+    icon: mdi:factory
+    web_server:
+      sorting_group_id: group_filament
+      sorting_weight: 1
+
+  - platform: template
+    id: filament_material
+    name: "Material"
+    icon: mdi:material-design
+    web_server:
+      sorting_group_id: group_filament
+      sorting_weight: 2
+
+  - platform: template
+    id: filament_color
+    name: "Color"
+    icon: mdi:palette
+    web_server:
+      sorting_group_id: group_filament
+      sorting_weight: 3
+
+  - platform: template
+    id: filament_color_hex
+    name: "Color Hex"
+    icon: mdi:palette-outline
+    entity_category: diagnostic
+    web_server:
+      sorting_group_id: group_diagnostic
+      sorting_weight: 11
+
+  - platform: template
+    id: filament_article_nr
+    name: "Article Nr"
+    icon: mdi:barcode
+    entity_category: diagnostic
+    web_server:
+      sorting_group_id: group_diagnostic
+      sorting_weight: 12
+
+sensor:
+  - platform: template
+    id: active_spool_id_sensor
+    name: "Active Spool ID"
+    icon: mdi:database-arrow-right
+    accuracy_decimals: 0
+    state_class: measurement
+    web_server:
+      sorting_group_id: group_nfc
+      sorting_weight: 3
+
+# ── Scripts ─────────────────────────────────────────────────
+
+script:
+  # Spoolman UID-Lookup
+  - id: nfc_spoolman_lookup
+    then:
+      - lambda: |-
+          std::string uid = id(nfc_last_uid);
+          if (uid.empty()) return;
+          ESP_LOGI("nfc", "Looking up UID: %s", uid.c_str());
+      - http_request.get:
+          url: !lambda |-
+            std::string base = id(backend_url).state;
+            std::string uid = id(nfc_last_uid);
+            // URL-encode UID (replace - with %2D not needed, - is safe)
+            return base + "/api/v1/spool?extra_field[nfc_uid]=" + uid +
+                   "&allow_archived=false";
+          request_headers:
+            Content-Type: application/json
+          on_response:
+            then:
+              - lambda: |-
+                  if (response->status_code != 200) {
+                    ESP_LOGW("nfc", "Spoolman lookup failed: %d", response->status_code);
+                    return;
+                  }
+                  // ESPHome: response body via response->get_string()
+                  std::string body = response->get_string();
+                  ESP_LOGD("nfc", "Lookup response: %s", body.c_str());
+
+                  // Einfacher JSON-Parser: prüfe ob items leer
+                  // Response: {"items": [...], "total": N}
+                  auto items_pos = body.find("\"items\":");
+                  if (items_pos == std::string::npos) return;
+
+                  // Prüfe ob items leer ist []
+                  auto bracket = body.find("[", items_pos);
+                  auto close = body.find("]", bracket);
+                  if (bracket == std::string::npos || close == std::string::npos) return;
+
+                  std::string items = body.substr(bracket + 1, close - bracket - 1);
+                  // Leerzeichen und Newlines entfernen
+                  items.erase(remove_if(items.begin(), items.end(), ::isspace), items.end());
+
+                  if (items.empty()) {
+                    // UID nicht bekannt → Benutzer muss Spule wählen
+                    ESP_LOGI("nfc", "Unknown UID, switching to spool selection");
+                    id(menu_page) = 3;  // Page 3: Spule wählen
+                    return;
+                  }
+
+                  // ID aus erstem Item extrahieren: {"id": N, ...}
+                  auto id_pos = body.find("\"id\":");
+                  if (id_pos == std::string::npos) return;
+                  auto id_start = id_pos + 5;
+                  auto id_end = body.find(",", id_start);
+                  if (id_end == std::string::npos) id_end = body.find("}", id_start);
+                  int spool_id = atoi(body.substr(id_start, id_end - id_start).c_str());
+
+                  if (spool_id <= 0) return;
+
+                  id(active_spool_id) = spool_id;
+                  id(active_spool_id_sensor).publish_state(spool_id);
+                  ESP_LOGI("nfc", "Spool found: #%d", spool_id);
+
+                  // Zurück zu Home
+                  id(menu_page) = 0;
+                  id(script_sync_weight).execute();

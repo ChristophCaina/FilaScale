@@ -1,10 +1,12 @@
 # ============================================================
-# filascale.yaml
-# Core package — contains ONLY functionality.
+# ci-validate.yaml
+# Used ONLY for CI validation — not for flashing!
 #
-# This file is referenced by:
-#   - filascale_factory.yaml  (Web Installer initial flash)
-#   - User's local ESPHome config (after Take Control)
+# Extends filascale.yaml but adds wifi: so ESPHome
+# components that require wifi (wifi_signal etc.) can validate.
+#
+# ESPHome resolves !include paths relative to THIS file,
+# so "filascale.yaml" works when both are in firmware/
 # ============================================================
 
 substitutions:
@@ -35,16 +37,42 @@ substitutions:
 esphome:
   name: ${name}
   friendly_name: ${friendly_name}
-  comment: ${comment}
+  comment: ${device_comment}
+  name_add_mac_suffix: false
   min_version: "2024.6.0"
   project:
     name: filascale.filamentspoolscale
-    version: "2026.4.0"
+    version: "2026.3.1"
 
 esp32:
   board: esp32dev
   framework:
     type: esp-idf
+    
+wifi:
+  ssid: "ci-validate"
+  password: "ci-validate"
+
+api:
+
+ota:
+  - platform: esphome
+  - platform: http_request
+
+http_request:
+  verify_ssl: false
+
+update:
+  - platform: http_request
+    name: "${name} Firmware Update"
+    source: https://christophcaina.github.io/filament_scale/firmware-builds/manifest-scale.json
+
+improv_serial:
+
+esp32_improv:
+  authorizer: none
+
+captive_portal:
 
 logger:
 
@@ -68,14 +96,6 @@ web_server:
     - id: group_diagnostic
       name: "Diagnose"
       sorting_weight: 99
-
-http_request:
-  verify_ssl: false
-
-update:
-  - platform: http_request
-    name: "Firmware Update"
-    source: "https://christophcaina.github.io/filascale/firmware-builds/manifest-filascale.json"
 
 packages:
   base:     github://ChristophCaina/filascale/firmware/common/main.yaml@main

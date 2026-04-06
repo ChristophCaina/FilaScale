@@ -1,0 +1,179 @@
+# ============================================================
+# sync.yaml
+# Spoolman API integration: weight sync, backend health check,
+# UID assignment after user spool selection
+#
+# Endpoints used:
+#   GET  /api/v1/spool?extra_field[nfc_uid]={uid}  → UID lookup
+#   GET  /api/v1/spool                              → spool list
+#   GET  /api/v1/health                             → backend check
+#   PATCH /api/v1/spool/{id}                        → weight + nfc_uid
+# ============================================================
+
+globals:
+  - id: last_synced_weight
+    type: float
+    restore_value: false
+    initial_value: "-1.0"
+
+text:
+  - platform: template
+    id: backend_url
+    name: "Backend URL"
+    icon: mdi:server-network
+    entity_category: config
+    optimistic: true
+    restore_value: true
+    initial_value: "http://homeassistant.local:7912"
+    mode: text
+    on_value:
+      then:
+        - script.execute: script_check_backend
+    web_server:
+      sorting_group_id: group_config
+      sorting_weight: 1
+
+binary_sensor:
+  - platform: template
+    id: backend_online
+    name: "Backend Online"
+    icon: mdi:server-network
+    device_class: connectivity
+    entity_category: diagnostic
+    web_server:
+      sorting_group_id: group_diagnostic
+      sorting_weight: 1
+
+button:
+  - platform: template
+    id: btn_sync
+    name: "Sync"
+    icon: mdi:cloud-sync
+    on_press:
+      then:
+        - script.execute: script_sync_weight
+    web_server:
+      sorting_group_id: group_scale
+      sorting_weight: 10
+
+script:
+  # ── Backend Health Check ────────────────────────────────
+  - id: script_check_backend
+    mode: single
+    then:
+      - http_request.get:
+          url: !lambda |-
+            return id(backend_url).state + "/api/v1/health";
+          request_headers:
+            Content-Type: application/json
+          on_response:
+            then:
+              - lambda: |-
+                  bool online = (response->status_code == 200);
+                  id(backend_online).publish_state(online);
+                  ESP_LOGI("sync", "Backend %s (HTTP %d)",
+                           online ? "online" : "offline",
+                           response->status_code);
+          on_error:
+            then:
+              - lambda: |-
+                  id(backend_online).publish_state(false);
+                  ESP_LOGW("sync", "Backend unreachable");
+
+  # ── Weight Sync → Spoolman PATCH ───────────────────────
+  - id: script_sync_weight
+    mode: single
+    then:
+      - lambda: |-
+          if (id(active_spool_id) <= 0) {
+            ESP_LOGW("sync", "No active spool, skipping sync");
+            return;
+          }
+          float weight = id(scale_weight).state;
+          if (weight < 0) weight = 0;
+          ESP_LOGI("sync", "Syncing weight %.1fg to spool #%d",
+                   weight, id(active_spool_id));
+      - http_request.send:
+          method: PATCH
+          url: !lambda |-
+            return id(backend_url).state + "/api/v1/spool/" +
+                   std::to_string(id(active_spool_id));
+          request_headers:
+            Content-Type: application/json
+          body: !lambda |-
+            char buf[64];
+            snprintf(buf, sizeof(buf),
+                     "{\"remaining_weight\": %.1f}",
+                     id(scale_weight).state);
+            return std::string(buf);
+          on_response:
+            then:
+              - lambda: |-
+                  if (response->status_code == 200) {
+                    id(last_synced_weight) = id(scale_weight).state;
+                    ESP_LOGI("sync", "Weight synced: %.1fg", id(last_synced_weight));
+                    id(beep_confirm).execute();
+                  } else {
+                    ESP_LOGW("sync", "Sync failed: HTTP %d", response->status_code);
+                    id(beep_error).execute();
+                  }
+
+  # ── Assign UID to selected spool ───────────────────────
+  - id: script_assign_uid
+    mode: single
+    then:
+      - lambda: |-
+          if (id(active_spool_id) <= 0 || id(nfc_last_uid).empty()) {
+            ESP_LOGW("sync", "Cannot assign: no spool or UID");
+            return;
+          }
+          ESP_LOGI("sync", "Assigning UID %s to spool #%d",
+                   id(nfc_last_uid).c_str(),
+                   id(active_spool_id));
+      - http_request.send:
+          method: PATCH
+          url: !lambda |-
+            return id(backend_url).state + "/api/v1/spool/" +
+                   std::to_string(id(active_spool_id));
+          request_headers:
+            Content-Type: application/json
+          body: !lambda |-
+            // JSON-escape UID (UIDs are hex+dash, no escaping needed)
+            return "{\"extra_fields\": {\"nfc_uid\": \"" +
+                   id(nfc_last_uid) + "\"}}";
+          on_response:
+            then:
+              - lambda: |-
+                  if (response->status_code == 200) {
+                    ESP_LOGI("sync", "UID assigned to spool #%d", id(active_spool_id));
+                    id(active_spool_id_sensor).publish_state(id(active_spool_id));
+                    // Sync weight immediately after assignment
+                    id(script_sync_weight).execute();
+                  } else {
+                    ESP_LOGW("sync", "UID assign failed: HTTP %d", response->status_code);
+                    id(beep_error).execute();
+                  }
+
+  # ── Periodic backend health check ──────────────────────
+  - id: script_periodic_check
+    mode: single
+    then:
+      - script.execute: script_check_backend
+
+interval:
+  # Health check every 60s
+  - interval: 60s
+    then:
+      - script.execute: script_periodic_check
+
+  # Auto weight sync every 5 minutes (only if spool active + weight changed)
+  - interval: 300s
+    then:
+      - lambda: |-
+          if (id(active_spool_id) <= 0) return;
+          float current = id(scale_weight).state;
+          float last = id(last_synced_weight);
+          // Only sync if weight changed more than 1g
+          if (abs(current - last) > 1.0f) {
+            id(script_sync_weight).execute();
+          }

@@ -1,9 +1,9 @@
 # ============================================================
-# factory.yaml
+# filascale_factory.yaml
 # Used ONLY for the Web Installer initial flash.
 #
 # Contains: wifi (AP/Improv), api (no key), ota, captive_portal
-# References filament-scale.yaml as a package.
+# References filascale.yaml as a package.
 #
 # After flashing:
 #   1. Improv WiFi → user enters credentials
@@ -45,7 +45,7 @@ substitutions:
   pin_addon_detect:  GPIO05   # Winder add-on detection
 
 packages:
-  filament_scale: github://ChristophCaina/filamscale/firmware/filascale.yaml@main
+  filament_scale: github://ChristophCaina/FilaScale/firmware/filascale.yaml@main
 
 # WiFi: no credentials — configured via Improv or Captive Portal
 wifi:
@@ -72,5 +72,5 @@ ota:
 
 # Points to this file so ESPHome knows what to import on Take Control
 dashboard_import:
-  package_import_url: github://ChristophCaina/filascale/firmware/factory.yaml@main
+  package_import_url: github://ChristophCaina/filascale/firmware/filascale_factory.yaml@main
   import_full_config: false
