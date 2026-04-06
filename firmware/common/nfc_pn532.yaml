@@ -296,7 +296,7 @@ script:
             // URL-encode UID (replace - with %2D not needed, - is safe)
             return base + "/api/v1/spool?extra_field[nfc_uid]=" + uid +
                    "&allow_archived=false";
-          headers:
+          request_headers:
             Content-Type: application/json
           on_response:
             then:
