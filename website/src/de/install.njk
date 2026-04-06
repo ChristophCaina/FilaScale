@@ -1,0 +1,73 @@
+---
+layout: layouts/base.njk
+i18n: de
+permalink: /de/install/
+title: Installation
+---
+
+<div class="page-header section">
+  <div class="container">
+    <h1>{{ i18n.install.title }}</h1>
+    <p class="page-subtitle">{{ i18n.install.subtitle }}</p>
+  </div>
+</div>
+
+<section class="install-section section">
+  <div class="container">
+
+    <!-- Version Info -->
+    <div class="version-banner">
+      <span class="version-label">{{ i18n.install.currentVersion }}</span>
+      <span class="version-number">{{ firmware.version }}</span>
+      <a href="{{ firmware.releaseUrl }}" target="_blank" rel="noopener noreferrer" class="version-link">
+        {{ i18n.install.releaseNotes }} →
+      </a>
+    </div>
+
+    <!-- Requirements -->
+    <div class="install-block">
+      <h2>{{ i18n.install.requirements }}</h2>
+      <ul class="requirements-list">
+        {% for req in i18n.install.reqList %}
+        <li>{{ req }}</li>
+        {% endfor %}
+      </ul>
+    </div>
+
+    <!-- Steps + Installer -->
+    <div class="install-layout">
+      <!-- Steps -->
+      <div class="install-steps">
+        <h2>{{ i18n.install.steps }}</h2>
+        <ol class="steps-list">
+          <li><span>{{ i18n.install.step1 }}</span></li>
+          <li><span>{{ i18n.install.step2 }}</span></li>
+          <li><span>{{ i18n.install.step3 }}</span></li>
+          <li><span>{{ i18n.install.step4 }}</span></li>
+        </ol>
+      </div>
+
+      <!-- Web Installer Widget -->
+      <div class="installer-widget">
+        <div id="installer-container" class="installer-container">
+          <esp-web-install-button
+            id="esp-install-btn"
+            manifest="{{ firmware.manifest | url }}">
+            <button slot="activate" class="btn btn-primary btn-large btn-install">
+              {{ i18n.install.btnInstall }}
+            </button>
+            <span slot="unsupported">{{ i18n.install.notSupported }}</span>
+          </esp-web-install-button>
+        </div>
+
+        <p class="browser-hint" id="browser-warning" hidden>
+          {{ i18n.install.browserWarning }}
+        </p>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<script type="module" src="https://unpkg.com/esp-web-tools@10/dist/web/install-button.js"></script>
+<script src="{{ "/assets/js/installer.js" | url }}"></script>

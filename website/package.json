@@ -1,0 +1,16 @@
+{
+  "name": "filascale-website",
+  "version": "1.0.0",
+  "description": "FilaScale GitHub Pages Website",
+  "scripts": {
+    "build": "eleventy",
+    "serve": "eleventy --serve",
+    "clean": "rm -rf _site"
+  },
+  "dependencies": {
+    "@11ty/eleventy": "^3.0.0",
+    "@11ty/eleventy-plugin-syntaxhighlight": "^5.0.0",
+    "markdown-it": "^14.0.0",
+    "markdown-it-anchor": "^9.0.0"
+  }
+}

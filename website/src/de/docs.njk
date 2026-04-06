@@ -1,0 +1,54 @@
+---
+layout: layouts/base.njk
+i18n: de
+permalink: /de/docs/
+title: Dokumentation
+---
+
+<div class="page-header section">
+  <div class="container">
+    <h1>{{ i18n.docs.title }}</h1>
+    <p class="page-subtitle">{{ i18n.docs.subtitle }}</p>
+  </div>
+</div>
+
+<section class="docs-section section">
+  <div class="container">
+    <div class="docs-grid">
+
+      <!-- Hardware -->
+      <div class="docs-category">
+        <h2 class="docs-category-title">🔧 {{ i18n.docs.sections.hardware }}</h2>
+        <ul class="docs-list">
+          <li><a href="{{ '/de/docs/hardware/' | url }}">Display Varianten</a></li>
+          <li><a href="{{ '/de/docs/hardware/display_st7920_de/' | url }}">ST7920 128×64</a></li>
+          <li><a href="{{ '/de/docs/hardware/display_lcd1602_de/' | url }}">LCD1602 16×2</a></li>
+        </ul>
+      </div>
+
+      <!-- Firmware -->
+      <div class="docs-category">
+        <h2 class="docs-category-title">⚡ {{ i18n.docs.sections.firmware }}</h2>
+        <ul class="docs-list">
+          <li><a href="{{ '/de/docs/firmware/entities_de/' | url }}">Home Assistant Entities</a></li>
+          <li><a href="{{ '/de/docs/firmware/webinterface_de/' | url }}">ESPHome Web-Interface</a></li>
+        </ul>
+      </div>
+
+      <!-- NFC Standards -->
+      <div class="docs-category">
+        <h2 class="docs-category-title">📡 {{ i18n.docs.sections.nfc }}</h2>
+        <ul class="docs-list">
+          <li><a href="{{ '/de/docs/nfc-standards/' | url }}">Übersicht</a></li>
+          <li><a href="{{ '/de/docs/nfc-standards/filaman-spool-tag_de/' | url }}">FilaMan Spool Tag</a></li>
+          <li><a href="{{ '/de/docs/nfc-standards/filaman-manufacturer-tag_de/' | url }}">FilaMan Hersteller-Tag</a></li>
+          <li><a href="{{ '/de/docs/nfc-standards/openspool_de/' | url }}">OpenSpool</a></li>
+          <li><a href="{{ '/de/docs/nfc-standards/openprinttag_de/' | url }}">OpenPrintTag</a></li>
+          <li><a href="{{ '/de/docs/nfc-standards/bambulab-rfid_de/' | url }}">BambuLab RFID</a></li>
+        </ul>
+      </div>
+
+    </div>
+  </div>
+</section>
+

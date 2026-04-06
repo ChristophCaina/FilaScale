@@ -1,0 +1,17 @@
+{
+  "name": "FilaScale (PN5180 + ST7920)",
+  "version": "2026.4.0",
+  "home_assistant_domain": "esphome",
+  "new_install_prompt_erase": true,
+  "builds": [
+    {
+      "chipFamily": "ESP32",
+      "parts": [
+        {
+          "path": "https://github.com/ChristophCaina/filascale/releases/latest/download/filascale-pn5180.factory.bin",
+          "offset": 0
+        }
+      ]
+    }
+  ]
+}

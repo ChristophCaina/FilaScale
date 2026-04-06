@@ -1,0 +1,103 @@
+# ============================================================
+# pages.yml
+# Builds the Eleventy website and deploys to GitHub Pages.
+#
+# Triggers:
+#   - push to main with website/** or docs/** changes
+#   - after successful firmware build & release (workflow_run)
+#   - release published
+#   - manual trigger
+# ============================================================
+
+name: Build & Deploy GitHub Pages
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "website/**"
+      - "docs/**"
+  workflow_run:
+    workflows: ["ESPHome Build & Release"]
+    types:
+      - completed
+  release:
+    types: [published]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  build:
+    name: Build Website
+    runs-on: ubuntu-latest
+    if: >
+      github.event_name != 'workflow_run' ||
+      github.event.workflow_run.conclusion == 'success'
+    defaults:
+      run:
+        working-directory: website
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: "npm"
+          cache-dependency-path: website/package-lock.json
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Copy docs into Eleventy source tree
+        working-directory: ${{ github.workspace }}
+        run: |
+          # Hardware docs
+          mkdir -p website/src/de/docs/hardware website/src/en/docs/hardware
+          cp -r docs/de/hardware/*.md website/src/de/docs/hardware/
+          cp -r docs/en/hardware/*.md website/src/en/docs/hardware/
+
+          # Firmware docs
+          mkdir -p website/src/de/docs/firmware website/src/en/docs/firmware
+          cp -r docs/de/firmware/*.md website/src/de/docs/firmware/
+          cp -r docs/en/firmware/*.md website/src/en/docs/firmware/
+
+          # NFC standards
+          mkdir -p website/src/de/docs/nfc-standards website/src/en/docs/nfc-standards
+          cp -r docs/nfc-standards/de/*.md website/src/de/docs/nfc-standards/
+          cp -r docs/nfc-standards/en/*.md website/src/en/docs/nfc-standards/
+
+      - name: Add front matter to docs
+        run: node scripts/add-frontmatter.js
+
+      - name: Build with Eleventy
+        run: npm run build
+        env:
+          ELEVENTY_ENV: production
+
+      - name: Upload Pages artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: website/_site
+
+  deploy:
+    name: Deploy to GitHub Pages
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
