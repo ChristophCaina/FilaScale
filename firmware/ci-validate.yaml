@@ -1,0 +1,22 @@
+# ============================================================
+# ci-validate.yaml
+# Used ONLY for CI validation — not for flashing!
+#
+# Extends filascale.yaml but adds wifi: so ESPHome
+# components that require wifi (wifi_signal etc.) can validate.
+#
+# ESPHome resolves !include paths relative to THIS file,
+# so "filascale.yaml" works when both are in firmware/
+# ============================================================
+
+packages:
+  filascale: !include filascale.yaml
+
+wifi:
+  ssid: "ci-validate"
+  password: "ci-validate"
+
+api:
+
+ota:
+  - platform: esphome
