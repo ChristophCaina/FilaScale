@@ -1022,3 +1022,4 @@ img { max-width: 100%; }
 @media (max-width: 600px) {
   .opensource-stats { grid-template-columns: 1fr 1fr; }
 }
+
