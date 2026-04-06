@@ -39,7 +39,7 @@ esphome:
   min_version: "2024.6.0"
   project:
     name: filascale.filamentspoolscale
-    version: "2026.4.0"
+    version: "2026.4.0b1"
 
 esp32:
   board: esp32dev
