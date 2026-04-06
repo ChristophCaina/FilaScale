@@ -9,6 +9,46 @@
 # so "filascale.yaml" works when both are in firmware/
 # ============================================================
 
+substitutions:
+  name: "filascale"
+  friendly_name: "FilaScale"
+  comment: "Filament Scale with ESPHome"
+
+  # -- Backend IPs --
+  backend_ip: ""
+
+  # -- Scale calibration --
+  scale_calibration_factor: ""
+
+  # -- Pin assignments (ESP32 DevKit defaults) --
+  pin_status_led:    GPIO02
+  pin_display_clk:   GPIO18
+  pin_display_mosi:  GPIO23
+  pin_display_cs:    GPIO17
+  pin_encoder_a:     GPIO32
+  pin_encoder_b:     GPIO33
+  pin_encoder_btn:   GPIO19
+  pin_buzzer:        GPIO16
+  pin_scale_dt:      GPIO21
+  pin_scale_sck:     GPIO22
+  pin_i2c_sda:       GPIO13
+  pin_i2c_scl:       GPIO14
+
+esphome:
+  name: ${name}
+  friendly_name: ${friendly_name}
+  comment: ${device_comment}
+  name_add_mac_suffix: false
+  min_version: "2024.6.0"
+  project:
+    name: filascale.filamentspoolscale
+    version: "2026.3.1"
+
+esp32:
+  board: esp32dev
+  framework:
+    type: esp-idf
+
 packages:
   filascale: !include filascale.yaml
 
@@ -20,3 +60,28 @@ api:
 
 ota:
   - platform: esphome
+  - platform: http_request
+
+http_request:
+  verify_ssl: false
+
+update:
+  - platform: http_request
+    name: "${name} Firmware Update"
+    source: https://christophcaina.github.io/filament_scale/firmware-builds/manifest-scale.json
+
+improv_serial:
+
+esp32_improv:
+  authorizer: none
+
+captive_portal:
+
+logger:
+
+packages:
+  base:     github://ChristophCaina/filascale/firmware/common/main.yaml@main
+  scale:    github://ChristophCaina/filascale/firmware/common/hx_711.yaml@main
+  display:  github://ChristophCaina/filascale/firmware/common/display_st7920.yaml@main
+  controls: github://ChristophCaina/filascale/firmware/common/controls.yaml@main
+  nfc:      github://ChristophCaina/filascale/firmware/common/nfc_pn532.yaml@main
