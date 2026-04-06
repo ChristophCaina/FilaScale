@@ -100,7 +100,7 @@ web_server:
 packages:
   base:     github://ChristophCaina/filascale/firmware/common/main.yaml@main
   scale:    github://ChristophCaina/filascale/firmware/common/hx_711.yaml@main
-  display:  github://ChristophCaina/filascale/firmware/common/display_st7920.yaml@main
-  controls: github://ChristophCaina/filascale/firmware/common/controls.yaml@main
-  nfc:      github://ChristophCaina/filascale/firmware/common/nfc_pn532.yaml@main
-  sync:     github://ChristophCaina/filascale/firmware/common/sync.yaml@main
+#  display:  github://ChristophCaina/filascale/firmware/common/display_st7920.yaml@main
+#  controls: github://ChristophCaina/filascale/firmware/common/controls.yaml@main
+#  nfc:      github://ChristophCaina/filascale/firmware/common/nfc_pn532.yaml@main
+#  sync:     github://ChristophCaina/filascale/firmware/common/sync.yaml@main
