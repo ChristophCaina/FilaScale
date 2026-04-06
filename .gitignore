@@ -1,12 +1,10 @@
 # VSCode
 .vscode
 
-# Eleventy / Node (scoped to website/)
-website/node_modules/
+# Node / Eleventy
+node_modules/
 website/_site/
-website/.cache/
-website/.eleventy-cache/
-
+website/node_modules/
 
 # Byte-compiled / optimized / DLL files
 __pycache__/

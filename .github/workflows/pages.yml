@@ -6,6 +6,10 @@ on:
     paths:
       - "website/**"
       - "docs/**"
+  workflow_run:
+    workflows: ["ESPHome Build & Release"]
+    types:
+      - completed
   release:
     types: [published]
   workflow_dispatch:
@@ -21,7 +25,11 @@ concurrency:
 
 jobs:
   build:
+    name: Build Website
     runs-on: ubuntu-latest
+    if: >
+      github.event_name != 'workflow_run' ||
+      github.event.workflow_run.conclusion == 'success'
     defaults:
       run:
         working-directory: website
@@ -72,6 +80,7 @@ jobs:
           path: website/_site
 
   deploy:
+    name: Deploy to GitHub Pages
     needs: build
     runs-on: ubuntu-latest
     environment:

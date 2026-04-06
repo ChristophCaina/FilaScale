@@ -8,7 +8,7 @@
       "chipFamily": "ESP32",
       "parts": [
         {
-          "path": "https://github.com/ChristophCaina/FilaScale/releases/latest/download/filascale.factory.bin",
+          "path": "https://github.com/ChristophCaina/FilaScale/releases/latest/download/filascale_factory.bin",
           "offset": 0
         }
       ]
